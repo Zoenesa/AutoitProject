@@ -89,6 +89,8 @@ HotKeySet("^+{F9}", CommandCariCrystal)
 HotKeySet("^+{F8}", CommandCariMetal)
 HotKeySet("^+{F10}", CommandCariPlank)
 HotKeySet("^+{F11}", CommandCariMarble)
+HotKeySet( "^+K", CommandStartServer)
+
 #EndRegion
 
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
@@ -186,10 +188,7 @@ Func CommandCariResource()
 		MouseMove(105, 403, 3)
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
-;~ 		$CurrTitle = "Elvenar AutoClick Log"
-;~ 		$AddTitle = "-[R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "]"
-;~ 		$tSetTitle = $CurrTitle & $addTitle
-;~ 		WinSetTitle( $CurrTitle, "", $tSetTitle)
+
 		$GetJobFromConfig = IniRead( $hfileSetting, "SetupJob", "Resource", 1)
 		$PilihanJob = 0
 		Switch $GetJobFromConfig
@@ -327,10 +326,6 @@ Func CommandCariResource()
 				Until $PilihanJob = 1
 
 		EndSwitch
-;~
-;~ 		PesanKonsol("Resource Found!", " Using Image: " & $iResc & "; PosX: " & $xRes & " PosY: " & $yRes)
-;~ 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes)
-;~ 		PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Beverage)")
 
 		If $PilihanJob = 1 Then
 			Sleep(Int($DelayPickRes))
@@ -468,8 +463,8 @@ Func CommandCariMetal()
 		PesanKonsol( "Collecting Metal", "PosX: " & $xMetal & " PosY: " & $yMetal & " Total Collected Metals: " & $TotalPickMetals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMetal = 0
-		Local $GetJobMetal = IniRead( $hfileSetting, "SetupJob", "Metal", 1)
-		Local $PickJobMetal
+		$GetJobMetal = IniRead( $hfileSetting, "SetupJob", "Metal", 1)
+		$PickJobMetal
 		Switch $GetJobMetal
 			Case 1
 				PesanKonsol( "Searching Job For Metal", "Using Job: " & $GetJobMetal & "(Precious Ring)")
@@ -607,8 +602,8 @@ Func CommandCariPlank()
 		MouseMove(105, 403, 3)
 		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
-		Local $GetJobPlank = IniRead( $hfileSetting, "SetupJob", "Plank", 1)
-		Local $PickJobPlank
+		$GetJobPlank = IniRead( $hfileSetting, "SetupJob", "Plank", 1)
+		$PickJobPlank
 		Switch $GetJobPlank
 			Case 1
 				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
@@ -728,14 +723,12 @@ Func CommandCariMarble()
 		Sleep(200)
 		MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 		$TotalPickMarbles += 1
-;~ 		Sleep(200)
 		MouseMove(105, 404, 3)
-;~ 		Sleep(Int($DelayPickRes))
 		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMarble = 0
-		Local $GetJobMarble = IniRead( $hfilesetting, "SetupJob", "Marble", 1)
-		Local $PickJobMarble
+		$GetJobMarble = IniRead( $hfilesetting, "SetupJob", "Marble", 1)
+		$PickJobMarble
 		Switch $GetJobMarble
 			Case 1
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
@@ -863,8 +856,8 @@ Func CommandCariCrystal()
 		PesanKonsol("Collecting Crsytal", "PosX: " & $xCrystal & " PosY: " & $yCrystal & " Total Collected Crystals: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchCrystal = 0
-		Local $GetJobCrystal = IniRead( $hfilesetting, "SetupJob", "Crystal", 1)
-		Local $PickJobCrystal
+		$GetJobCrystal = IniRead( $hfilesetting, "SetupJob", "Crystal", 1)
+		$PickJobCrystal
 		Switch $GetJobCrystal
 			Case 1
 				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
@@ -1064,35 +1057,6 @@ Func CommandCariSilk()
 
 EndFunc
 
-Func _PickJobFromSetting( $JobName, $hCfgSection, $hCfgKey, $hCfgValue, $ImgName, $LastPosX, $LastPosY, ByRef $FoundPosX, ByRef $FoundPosY, $ImgToleransi)
-
-	$GetJobConfig = IniRead( $hfilesetting, $hCfgSection, $hCfgKey, $hCfgValue)
-	$SearchJobOnConfig = 0
-	$iJob = 0
-	Do
-		;x1: 356, y1: 249, Right: 1008, bottom: 650
-		PesanKonsol( "Searching Job: " & $JobName, " Count: " & $iJob + 1)
-		$SearchJobOnConfig = _ImageSearchArea( $ImgName, 1, 356, 249, 1008, 650, $FoundPosX, $FoundPosY, $ImgToleransi)
-		Sleep(Int($DelaySearchJob))
-		$iJob += 1
-		If $iJob = 8 Then
-			MouseClick( "primary", 103, 403, 1, 3)
-			Sleep(300)
-			MouseClick( "primary", $LastPosX, $LastPosY, 1, 7)
-			$iJob = 0
-		EndIf
-		PesanKonsol("Lookup Image: " & $JobName, "Search Count: " & $iJob)
-	Until $SearchJobOnConfig = 1
-
-	If $SearchJobOnConfig = 1 Then
-		Sleep(200)
-		PesanKonsol("Job Found", " ")
-		Sleep(Int($DelayPickRes))
-		MouseClick( "primary", $FoundPosX, $FoundPosY, 1, 7)
-		PesanKonsol("Pick Job: " & $JobName)
-	EndIf
-EndFunc
-
 Func PesanKonsol( $refMsg, $refComment = " ")
 	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & _
 	$refMsg & "; " & $refComment & @CRLF)
@@ -1159,15 +1123,12 @@ Func CommandSetPosisiKota()
 	Sleep(800)
 EndFunc
 
-Func CommandSetTitle( $tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk)
+Func CommandSetTitle( $CurrTitle = "Elvenar AutoClick Log", $tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk)
 	Sleep(300)
-	$CurrTitle = "Elvenar AutoClick Log"
 	$AddTitle = "-[R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
 	$tSetTitle = $CurrTitle & $addTitle
 	WinSetTitle( $CurrTitle, "", $tSetTitle)
 EndFunc
-
-HotKeySet( "^+K", CommandStartServer)
 
 Func CommandStartServer()
 	Sleep(Random(600,1500))
