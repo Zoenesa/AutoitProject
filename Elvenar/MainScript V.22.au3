@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.23.4
+#AutoIt3Wrapper_Res_Fileversion=17.2.23.5
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -58,7 +58,14 @@ Local $multiServer = IniRead( $hfileSetting, "SettingAplikasi", "multiserver", 0
 Local $xRes = 0, $yRes = 0, $xJob = 0, $yJob = 0, $xPosReset = 0, $yPosReset = 0
 Local $xGold = 0, $yGold = 0, $xServer = 0, $yServer = 0
 Local $CountJob = 0, $GoldFailClickX = 0, $GoldFailClickY = 0
-Global $TotalPickResources = 0, $TotalPickGolds = 0, $TotalPickMetals = 0, $TotalPickPlanks = 0, $TotalPickMarbles = 0, $TotalPickCrystals = 0, $TotalPickScrolls = 0, $TotalPickSilks = 0
+Global $TotalPickResources = 0
+Global $TotalPickGolds = 0
+Global $TotalPickMetals = 0
+Global $TotalPickPlanks = 0
+Global $TotalPickMarbles = 0
+Global $TotalPickCrystals = 0
+Global $TotalPickScrolls = 0
+Global $TotalPickSilks = 0
 Global $UPosXRes = IniRead( $hfilesetting, "CoordinateUserPick", "PickXResource", 8)
 Global $UPosYRes = IniRead( $hfileSetting, "CoordinateUserPick", "PickYResource", 65)
 Global $UPosXGold = IniRead( $hfileSetting, "CoordinateUserPick", "PickXGold", 10)
@@ -597,11 +604,12 @@ Func CommandCariPlank()
 		Sleep(100)
 		PesanKonsol("Plank Found", "Using Image: " & $iPlank & "; PosX: " & $xPlank & " PosY: " & $yPlank)
 		Sleep(200)
-		MouseClick("primary", $xPlank + $UPosXPlank, $yPlank + $UPosYPlank, 1, 8)
+		MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 		$TotalPickPlanks += 1
 		MouseMove(105, 403, 3)
-		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
+		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " );& $TotalPickPlanks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
+		$CountSearchPlank = 0
 		$GetJobPlank = IniRead( $hfileSetting, "SetupJob", "Plank", 1)
 		$PickJobPlank = 0
 		Switch $GetJobPlank
@@ -616,7 +624,7 @@ Func CommandCariPlank()
 						MouseClick( "primary", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + $UPosXPlank, $yPlank + $UPosYPlank, 1, 8)
+						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
@@ -632,7 +640,7 @@ Func CommandCariPlank()
 						MouseClick( "primary", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + $UPosXPlank, $yPlank + $UPosYPlank, 1, 8)
+						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
@@ -648,13 +656,28 @@ Func CommandCariPlank()
 						MouseClick( "primary", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + $UPosXPlank, $yPlank + $UPosYPlank, 1, 8)
+						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
 				Until $PickJobPlank = 1
 			Case 4
-				ContinueCase
+;~ 				ContinueCase
+				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
+				Do
+					$PickJobPlank = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchJob))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "primary", 103, 404, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
+						MouseMove(103, 404, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobPlank = 1
 			Case Else
 				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
 				Do
@@ -666,7 +689,7 @@ Func CommandCariPlank()
 						MouseClick( "primary", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + $UPosXPlank, $yPlank + $UPosYPlank, 1, 8)
+						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
@@ -724,7 +747,7 @@ Func CommandCariMarble()
 		MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 		$TotalPickMarbles += 1
 		MouseMove(105, 404, 3)
-		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
+		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: ") ; & $TotalPickMarbles)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMarble = 0
 		$GetJobMarble = IniRead( $hfilesetting, "SetupJob", "Marble", 1)
@@ -750,7 +773,7 @@ Func CommandCariMarble()
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
 				Do
 					$PickJobMarble = _ImageSearch( $imgsrc38, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
+					Sleep(100)
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
@@ -767,7 +790,7 @@ Func CommandCariMarble()
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
 				Do
 					$PickJobMarble = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
+					Sleep(100)
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
@@ -781,13 +804,28 @@ Func CommandCariMarble()
 				Until $PickJobMarble = 1
 
 			Case 4
-				ContinueCase
+;~ 				ContinueCase
+				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
+				Do
+					$PickJobMarble = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchJob))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "primary", 103, 404, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+						MouseMove(103, 404, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobMarble = 1
 
 			Case Else
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
 				Do
 					$PickJobMarble = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
+					Sleep(100)
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
@@ -907,7 +945,20 @@ Func CommandCariCrystal()
 				Until $PickJobCrystal = 1
 
 			Case 4
-				ContinueCase
+				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
+				Do
+					$PickJobCrystal = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchJob))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "primary", 103, 404, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
+						$CountJob = 0
+					EndIf
+				Until $PickJobCrystal = 1
 			Case Else
 				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
 				Do
@@ -974,10 +1025,11 @@ Func CommandCariScroll()
 		Switch $iScrol
 			Case 0, 1
 				$TotalPickScrolls += 1
+				CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 			Case 2, 3
 				$TotalPickSilks += 1
+				CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		EndSwitch
-		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$GetJobScroll= Iniread( $hfilesetting, "SetupJob", "Scroll", 1)
 		$pickJobScroll = 0
 		Switch $GetJobScroll
@@ -1023,7 +1075,18 @@ Func CommandCariScroll()
 				Until $pickJobScroll = 1
 
 			Case 4
-				ContinueCase
+				Do
+					$pickJobScroll = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchJob))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						MouseClick("primary", 103, 403, 1, 3)
+						Sleep(300)
+						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
+						$CountJob = 0
+					EndIf
+					PesanKonsol("Searching Job")
+				Until $pickJobScroll = 1
 			Case Else
 				Do
 					$pickJobScroll = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
