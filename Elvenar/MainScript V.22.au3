@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.23.5
+#AutoIt3Wrapper_Res_Fileversion=17.2.23.6
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -20,6 +20,8 @@ Opt( "MouseClickDelay", 10)
 
 #Region Deklarasi
 Global $Paused
+
+Global $hFileSetting = @ScriptDir & "\config\Config.ini"
 
 Local $LimitSettingFindResource = IniRead( $hfileSetting, "SettingAplikasi", "LimitFindResource", 400)
 Local $LimitSettingFindGold = IniRead( $hfilesetting, "SettingAplikasi", "LimitFindGold", 90)
@@ -90,14 +92,14 @@ HotKeySet("^+p", "TogglePause")
 HotKeySet("^+q", "CommandExit")
 HotKeySet("{PGUP}", "CommandCariResource")
 HotKeySet( "^+{F7}", "CommandCariGold")
-HotKeySet("{F6}", CenteringScreen)
-HotKeySet("{HOME}", CommandSetPosisiKota)
-HotKeySet("^+{F9}", CommandCariCrystal)
-HotKeySet("^+{F8}", CommandCariMetal)
-HotKeySet("^+{F10}", CommandCariPlank)
-HotKeySet("^+{F11}", CommandCariMarble)
-HotKeySet( "^+K", CommandStartServer)
-
+HotKeySet("{F6}", "CenteringScreen")
+HotKeySet("{HOME}", "CommandSetPosisiKota")
+HotKeySet("^+{F9}", "CommandCariCrystal")
+HotKeySet("^+{F8}", "CommandCariMetal")
+HotKeySet("^+{F10}", "CommandCariPlank")
+HotKeySet("^+{F11}", "CommandCariMarble")
+HotKeySet( "^+K", "CommandStartServer")
+HotKeySet("^+r", "CommandRestart")
 #EndRegion
 
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
@@ -359,11 +361,7 @@ Func CommandCariGold()
 	#EndRegion
 	#Region
 	Do
-		If	$boolSearchArea = 1 Then
-			$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, 60)
-		Else
-			$CariGold = _ImageSearch( $ArrayImgFindGold[$iGold], 1, $xGold, $yGold, 60)
-		EndIf
+		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, 60)
 		Local $FalseWindw = _ImageSearch( $imgTutupWindow, 1, $xFalseWindw, $yFalseWindw, 10)
 		If $FalseWindw = 1 Then
 			Sleep(100)
@@ -521,22 +519,6 @@ Func CommandCariMetal()
 						$CountJob = 0
 					EndIf
 				Until $PickJobMetal = 1
-			Case 4
-				PesanKonsol( "Searching Job For Metal", "Using Job: " & $GetJobMetal & "(Precious Ring)")
-				Do
-					$PickJobMetal = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
-						MouseMove(103, 404, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobMetal = 1
 			Case Else
 				PesanKonsol( "Searching Job For Metal", "Using Job: " & $GetJobMetal & "(Precious Ring)")
 				Do
@@ -607,7 +589,7 @@ Func CommandCariPlank()
 		MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 		$TotalPickPlanks += 1
 		MouseMove(105, 403, 3)
-		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " );& $TotalPickPlanks)
+		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchPlank = 0
 		$GetJobPlank = IniRead( $hfileSetting, "SetupJob", "Plank", 1)
@@ -661,29 +643,12 @@ Func CommandCariPlank()
 						$CountJob = 0
 					EndIf
 				Until $PickJobPlank = 1
-			Case 4
-;~ 				ContinueCase
+			Case Else
 				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
 				Do
 					$PickJobPlank = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
 					Sleep(Int($DelaySearchJob))
 					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
-						MouseMove(103, 404, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobPlank = 1
-			Case Else
-				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
-				Do
-				$PickJobPlank = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
-				Sleep(Int($DelaySearchJob))
-				$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
 						MouseClick( "primary", 103, 404, 1, 3)
@@ -708,7 +673,7 @@ Func CommandCariPlank()
 			$yJob = 0
 		EndIf
 	EndIf
-	CommandCariPlank
+	CommandCariPlank()
 EndFunc
 
 Func CommandCariMarble()
@@ -747,7 +712,7 @@ Func CommandCariMarble()
 		MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 		$TotalPickMarbles += 1
 		MouseMove(105, 404, 3)
-		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: ") ; & $TotalPickMarbles)
+		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMarble = 0
 		$GetJobMarble = IniRead( $hfilesetting, "SetupJob", "Marble", 1)
@@ -785,7 +750,6 @@ Func CommandCariMarble()
 						$CountJob = 0
 					EndIf
 				Until $PickJobMarble = 1
-
 			Case 3
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
 				Do
@@ -802,25 +766,6 @@ Func CommandCariMarble()
 						$CountJob = 0
 					EndIf
 				Until $PickJobMarble = 1
-
-			Case 4
-;~ 				ContinueCase
-				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
-				Do
-					$PickJobMarble = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
-						MouseMove(103, 404, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobMarble = 1
-
 			Case Else
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
 				Do
@@ -927,27 +872,10 @@ Func CommandCariCrystal()
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
-
 			Case 3
 				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
 				Do
 					$PickJobCrystal = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
-						$CountJob = 0
-					EndIf
-				Until $PickJobCrystal = 1
-
-			Case 4
-				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
-				Do
-					$PickJobCrystal = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
 					Sleep(Int($DelaySearchJob))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -974,7 +902,6 @@ Func CommandCariCrystal()
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
-
 		EndSwitch
 		If $PickJobCrystal = 1 Then
 			Sleep(Int($DelayPickRes))
@@ -1000,7 +927,7 @@ Func CommandCariScroll()
 	$CountJob = 0
 	$xJob = 0
 	$yJob = 0
-
+	$NumScroll = 0
 	Do
 		If $boolSearchArea = 1 Then
 			$CariScroll = _ImageSearchArea( $ArrayImgScrollSilk[$iScrol], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xScrol, $yScrol, 70)
@@ -1011,25 +938,51 @@ Func CommandCariScroll()
 		$iScrol += 1
 		If $iScrol = 4 Then $iScrol = 0
 		$CountSearchScroll += 1
+		$NumScroll = $iScrol
 		PesanKonsol("Searching Scroll", "Counting: " & $CountSearchScroll)
 		If $CountSearchScroll = 80 Then
 			CommandCariResource()
 		EndIf
-
 	Until $CariScroll = 1
+
 	If $CariScroll = 1 Then
 		Sleep(100)
 		PesanKonsol("Scroll Found")
 		Sleep(200)
 		MouseClick( "primary", $xScrol + 4, $yScrol + 70, 1, 10)
-		Switch $iScrol
-			Case 0, 1
+		Switch $NumScroll
+			Case 1, 2
 				$TotalPickScrolls += 1
 				CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
-			Case 2, 3
+			Case 3, 4
 				$TotalPickSilks += 1
 				CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		EndSwitch
+		If $NumScroll = 0 Then
+			ToolTip( "0",0,0,"Using If")
+		ElseIf $NumScroll = 1 Then
+			ToolTip( "1",0,0,"Using If")
+		ElseIf $NumScroll = 2 Then
+			ToolTip( "2",0,0,"Using If")
+		ElseIf $NumScroll = 3 Then
+			ToolTip( "3",0,0,"Using If")
+		ElseIf $NumScroll = 4 Then
+			ToolTip( "4",0,0,"Using If")
+		EndIf
+
+		Select
+			Case $NumScroll = 0
+			ToolTip( "0",0,0,"Using Select Case")
+			Case $NumScroll = 1
+			ToolTip( "1",0,0,"Using Select Case")
+			Case $NumScroll = 2
+			ToolTip( "2",0,0,"Using Select Case")
+			Case $NumScroll = 3
+			ToolTip( "3",0,0,"Using Select Case")
+			Case $NumScroll = 4
+			ToolTip( "4",0,0,"Using Select Case")
+		EndSelect
+
 		$GetJobScroll= Iniread( $hfilesetting, "SetupJob", "Scroll", 1)
 		$pickJobScroll = 0
 		Switch $GetJobScroll
@@ -1059,24 +1012,9 @@ Func CommandCariScroll()
 					EndIf
 					PesanKonsol("Searching Job")
 				Until $pickJobScroll = 1
-
 			Case 3
 				Do
 					$pickJobScroll = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchJob))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						MouseClick("primary", 103, 403, 1, 3)
-						Sleep(300)
-						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
-						$CountJob = 0
-					EndIf
-					PesanKonsol("Searching Job")
-				Until $pickJobScroll = 1
-
-			Case 4
-				Do
-					$pickJobScroll = _ImageSearch( $imgsrc11, 1, $xJob, $yJob, 65)
 					Sleep(Int($DelaySearchJob))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -1116,13 +1054,14 @@ Func CommandCariScroll()
 	CommandCariScroll()
 EndFunc
 
-Func CommandCariSilk()
-
+Func CommandRestart()
+	Sleep(Random(1000, 3000))
+	ShellExecute(@ScriptFullPath)
+	Exit
 EndFunc
 
 Func PesanKonsol( $refMsg, $refComment = " ")
-	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & _
-	$refMsg & "; " & $refComment & @CRLF)
+	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF)
 EndFunc
 
 Func CommandSetPosisiKota()
@@ -1188,9 +1127,12 @@ EndFunc
 
 Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk,  $CurrTitle = "Elvenar AutoClick Log")
 	Sleep(300)
-	$AddTitle = "-[R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
-	$tSetTitle = $CurrTitle & $addTitle
-	WinSetTitle( $CurrTitle, "", $tSetTitle)
+	Local $AddTitle = " [R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
+	Local $tSetTitle = $CurrTitle & $addTitle
+;~ 	WinSetTitle( $CurrTitle, "", $tSetTitle)
+	DllCall( "Kernel32.dll", "bool", "AllocConsole")
+	_WinApi_SetConsoleTitle($tSetTitle)
+	DllClose("Kernel32.dll")
 EndFunc
 
 Func CommandStartServer()
@@ -1225,7 +1167,7 @@ Func CommandStartServer()
 EndFunc
 
 While 1
-	Sleep(50)
+	Sleep(10)
 Wend
 
 Func TogglePause()
@@ -1245,3 +1187,6 @@ Func _WinApi_SetConsoleTitle($sTitle, $hDLL = "Kernel32.dll")
     If $iRet[0] < 1 Then Return False
     Return True
 EndFunc
+
+
+
