@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.2.23.2.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.2.23.2_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.22.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.22_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
@@ -464,7 +464,7 @@ Func CommandCariMetal()
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMetal = 0
 		$GetJobMetal = IniRead( $hfileSetting, "SetupJob", "Metal", 1)
-		$PickJobMetal
+		$PickJobMetal = 0
 		Switch $GetJobMetal
 			Case 1
 				PesanKonsol( "Searching Job For Metal", "Using Job: " & $GetJobMetal & "(Precious Ring)")
@@ -603,7 +603,7 @@ Func CommandCariPlank()
 		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$GetJobPlank = IniRead( $hfileSetting, "SetupJob", "Plank", 1)
-		$PickJobPlank
+		$PickJobPlank = 0
 		Switch $GetJobPlank
 			Case 1
 				PesanKonsol("Searching Job", "Using Job: " & $GetJobPlank & "(Beverage)")
@@ -728,7 +728,7 @@ Func CommandCariMarble()
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMarble = 0
 		$GetJobMarble = IniRead( $hfilesetting, "SetupJob", "Marble", 1)
-		$PickJobMarble
+		$PickJobMarble = 0
 		Switch $GetJobMarble
 			Case 1
 				PesanKonsol("Searching Job Marble", "Using Job: " & $GetJobMarble & "(Beverage)")
@@ -857,7 +857,7 @@ Func CommandCariCrystal()
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchCrystal = 0
 		$GetJobCrystal = IniRead( $hfilesetting, "SetupJob", "Crystal", 1)
-		$PickJobCrystal
+		$PickJobCrystal = 0
 		Switch $GetJobCrystal
 			Case 1
 				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobCrystal & "(Small Flacon)")
@@ -1123,7 +1123,7 @@ Func CommandSetPosisiKota()
 	Sleep(800)
 EndFunc
 
-Func CommandSetTitle( $CurrTitle = "Elvenar AutoClick Log", $tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk)
+Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk,  $CurrTitle = "Elvenar AutoClick Log")
 	Sleep(300)
 	$AddTitle = "-[R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
 	$tSetTitle = $CurrTitle & $addTitle
