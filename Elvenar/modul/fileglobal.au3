@@ -8,7 +8,7 @@ Global $imgPathPlank = @ScriptDir & "\img\05plank\"
 Global $imgPathMarble = @ScriptDir & "\img\06marble\"
 Global $imgPathCrystal = @ScriptDir & "\img\07crystal\"
 Global $imgPathGold = @ScriptDir & "\img\08Gold\"
-Global $hFileSetting = @ScriptDir & "\config\Config.ini"
+
 Global $imgSrcBarrack = $imgPathMain & "Barracks.bmp"
 
 Global $imgsrc1 = $imgPathResc & "resl.bmp"
@@ -98,7 +98,7 @@ Global $imgHome1 = @ScriptDir & "\img\03Main\Home.bmp"
 Global $imgHome2 = @ScriptDir & "\img\03Main\Home2.bmp"
 Global $imgHome3 = @ScriptDir & "\img\03Main\City.bmp"
 Global $imgHome4 = @ScriptDir & "\img\03Main\City2.bmp"
-	
+
 Global $imgServer1 = $imgPathMain & "Arendyll.bmp"
 Global $imgServer2 = $imgPathMain & "Felyndral.bmp"
 Global $imgServer3 = $imgPathMain & "Winyandor.bmp"
