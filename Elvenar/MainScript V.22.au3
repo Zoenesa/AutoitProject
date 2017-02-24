@@ -958,30 +958,6 @@ Func CommandCariScroll()
 				$TotalPickSilks += 1
 				CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		EndSwitch
-		If $NumScroll = 0 Then
-			ToolTip( "0",0,0,"Using If")
-		ElseIf $NumScroll = 1 Then
-			ToolTip( "1",0,0,"Using If")
-		ElseIf $NumScroll = 2 Then
-			ToolTip( "2",0,0,"Using If")
-		ElseIf $NumScroll = 3 Then
-			ToolTip( "3",0,0,"Using If")
-		ElseIf $NumScroll = 4 Then
-			ToolTip( "4",0,0,"Using If")
-		EndIf
-
-		Select
-			Case $NumScroll = 0
-			ToolTip( "0",0,0,"Using Select Case")
-			Case $NumScroll = 1
-			ToolTip( "1",0,0,"Using Select Case")
-			Case $NumScroll = 2
-			ToolTip( "2",0,0,"Using Select Case")
-			Case $NumScroll = 3
-			ToolTip( "3",0,0,"Using Select Case")
-			Case $NumScroll = 4
-			ToolTip( "4",0,0,"Using Select Case")
-		EndSelect
 
 		$GetJobScroll= Iniread( $hfilesetting, "SetupJob", "Scroll", 1)
 		$pickJobScroll = 0
