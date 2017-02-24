@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.23.10
+#AutoIt3Wrapper_Res_Fileversion=17.2.23.11
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -23,7 +23,7 @@ Global $Paused
 
 Global $hFileSetting = @ScriptDir & "\config\Config.ini"
 
-Local $LimitSettingFindResource
+Local $LimitFindResource
 Local $LimitSettingFindGold
 Local $LimitFindMetal
 Local $LimitFindPlank
@@ -31,7 +31,7 @@ Local $LimitFindMarble
 Local $LimitFindCrystal
 Local $LimitFindScroll
 Local $LimitFindSilk
-Local $OnlyResource
+Local $OnlySearchResource
 Local $boolSearchArea
 Local $SearchAreaTop
 Local $SearchAreaLeft
@@ -55,6 +55,7 @@ Local $ScrollStack
 Local $SilkStack
 Local $ReadServer
 Local $multiServer
+Local $MetalFound = 0
 
 ;Ref Kordinat
 Local $xRes = 0, $yRes = 0, $xJob = 0, $yJob = 0, $xPosReset = 0, $yPosReset = 0
@@ -68,22 +69,23 @@ Global $TotalPickMarbles = 0
 Global $TotalPickCrystals = 0
 Global $TotalPickScrolls = 0
 Global $TotalPickSilks = 0
-Global $UPosXRes = IniRead( $hfilesetting, "CoordinateUserPick", "PickXResource", 8)
-Global $UPosYRes = IniRead( $hfileSetting, "CoordinateUserPick", "PickYResource", 65)
-Global $UPosXGold = IniRead( $hfileSetting, "CoordinateUserPick", "PickXGold", 10)
-Global $UPosYGold = IniRead( $hfileSetting, "CoordinateUserPick", "PickYGold", 70)
-Global $UPosXMetal = IniRead( $hfileSetting, "CoordinateUserPick", "PickXMetal", 6)
-Global $UPosYMetal = IniRead( $hfileSetting, "CoordinateUserPick", "PickYMetal", 75)
-Global $UPosXPlank = IniRead( $hfileSetting, "CoordinateUserPick", "PickXPlank", 10)
-Global $UPosYPlank = IniRead( $hfileSetting, "CoordinateUserPick", "PickYPlank", 70)
-Global $UPosXMarble = IniRead( $hfileSetting, "CoordinateUserPick", "PickXMarble", 4)
-Global $UPosYMarble = IniRead( $hfileSetting, "CoordinateUserPick", "PickYMarble", 70)
-Global $UPosXCrystal = IniRead( $hfileSetting, "CoordinateUserPick", "PickXCrystal", 5)
-Global $UPosYCrystal = IniRead( $hfileSetting, "CoordinateUserPick", "PickYCrystal", 75)
-Global $UPosXScroll = IniRead( $hfileSetting, "CoordinateUserPick", "PickX", 0)
-Global $UPosYScroll = IniRead( $hfileSetting, "CoordinateUserPick", "PickY", 60)
-;~ Global $UPosX = IniRead( $hfileSetting, "CoordinateUserPick", "PickX", 0)
-;~ Global $UPosY = IniRead( $hfileSetting, "CoordinateUserPick", "PickY", 60)
+
+Global $UPosXRes
+Global $UPosYRes
+Global $UPosXGold
+Global $UPosYGold
+Global $UPosXMetal
+Global $UPosYMetal
+Global $UPosXPlank
+Global $UPosYPlank
+Global $UPosXMarble
+Global $UPosYMarble
+Global $UPosXCrystal
+Global $UPosYCrystal
+Global $UPosXScroll
+Global $UPosYScroll
+Global $UPosXSilk
+Global $UPosYSilk
 
 #EndRegion
 
@@ -94,13 +96,13 @@ Global $UPosYScroll = IniRead( $hfileSetting, "CoordinateUserPick", "PickY", 60)
 	HotKeySet("{HOME}", "CommandSetPosisiKota")
 	HotKeySet( "^+K", "CommandStartServer")
 	HotKeySet("^+r", "CommandRestart")
-	HotKeySet("^+{NUMPAD0}","CommandCariResource")
-	HotKeySet("^+{NUMPAD1}","CommandCariGold")
-	HotKeySet("^+{NUMPAD2}","CommandCariMetal")
-	HotKeySet("^+{NUMPAD3}","CommandCariPlank")
-	HotKeySet("^+{NUMPAD4}","CommandCariMarble")
-	HotKeySet("^+{NUMPAD5}","CommandCariCrystal")
-	HotKeySet("^+{NUMPAD6}","CommandCariScroll")
+	HotKeySet("^{NUMPAD0}","CommandCariResource")
+	HotKeySet("^{NUMPAD1}","CommandCariGold")
+	HotKeySet("^{NUMPAD2}","CommandCariMetal")
+	HotKeySet("^{NUMPAD3}","CommandCariPlank")
+	HotKeySet("^{NUMPAD4}","CommandCariMarble")
+	HotKeySet("^{NUMPAD5}","CommandCariCrystal")
+	HotKeySet("^{NUMPAD6}","CommandCariScroll")
 ;~ 	HotKeySet("^+{NUMPAD7}","CommandCariSilk")
 ;~ 	HotKeySet("^+{NUMPAD8}","CommandCariResource")
 ;~ 	HotKeySet("^+{NUMPAD9}","CommandCariResource")
@@ -130,7 +132,7 @@ Func ReadSettingan()
 	$GetJobFromConfig = IniRead($hfileSetting, "SetupJob", "Resource", 1)
 	$GetJobMetal = IniRead($hfileSetting, "SetupJob", "Metal", 1)
 
-	$LimitSettingFindResource = IniRead($hfileSetting, "SettingAplikasi", "LimitFindResource", 100)
+	$LimitFindResource = IniRead($hfileSetting, "SettingAplikasi", "LimitFindResource", 100)
 	$LimitSettingFindGold = IniRead($hfilesetting, "SettingAplikasi", "LimitFindGold", 90)
 	$LimitFindMetal = IniRead($hfilesetting, "SettingAplikasi", "LimitFindMetal", 100)
 	$LimitFindPlank = IniRead($hfileSetting, "SettingAplikasi", "LimitFindPlank", 100)
@@ -138,7 +140,7 @@ Func ReadSettingan()
 	$LimitFindCrystal = IniRead($hfileSetting, "SettingAplikasi", "LimitFindCrystal", 100)
 	$LimitFindScroll = IniRead($hfileSetting, "SettingAplikasi", "LimitFindScroll", 100)
 	$LimitFindSilk = IniRead($hfileSetting, "SettingAplikasi", "LimitFindSilk", 100)
-	$OnlyResource = IniRead($hfileSetting, "SettingAplikasi", "OnlyResource", 1)
+	$OnlySearchResource = IniRead($hfileSetting, "SettingAplikasi", "OnlyResource", 1)
 	$boolSearchArea = IniRead($hfileSetting, "SettingAplikasi", "SearchArea", 1)
 	$SearchAreaTop = IniRead($hfilesetting, "SettingAplikasi", "TopX", 176)
 	$SearchAreaLeft = IniRead($hfilesetting, "SettingAplikasi", "TopY", 206)
@@ -164,6 +166,8 @@ Func ReadSettingan()
 	$UPosYCrystal = IniRead($hfileSetting, "CoordinateUserPick", "PickYCrystal", 75)
 	$UPosXScroll = IniRead($hfileSetting, "CoordinateUserPick", "PickX", 0)
 	$UPosYScroll = IniRead($hfileSetting, "CoordinateUserPick", "PickY", 60)
+	$UPosXSilk = IniRead( $hfileSetting, "CoordinateUserPick", "PickX", 5)
+	$UPosYSilk = IniRead( $hfileSetting, "CoordinateUserPick", "PickY", 70)
 
 
 EndFunc
@@ -191,7 +195,6 @@ EndFunc
 Func CommandCariResource()
 	#Region Deklarasi Sub
 	$iResc = 0
-	Local $MetalFound = 0
 	$CountSearchResc = 0
 	$CariResource = 0
 	$xJob = 0
@@ -207,11 +210,13 @@ Func CommandCariResource()
 		Sleep(Int($dSrcLoop))
 		PesanKonsol("Searching Resource", "Count: " & $CountSearchResc & " Using Image: " & ($iResc + 1))
 		;Total Limit Searching Resource dari File Config
-		If $CountSearchResc = Int($LimitSettingFindResource) Then
-			If $OnlyResource = 1 Then
+		$LimitFindResource = IniRead($hfileSetting, "SettingAplikasi", "LimitFindResource", 100)
+		If $CountSearchResc = Int($LimitFindResource) Then
+		$OnlySearchResource = IniRead($hfileSetting, "SettingAplikasi", "OnlyResource", 1)
+			If $OnlySearchResource = 1 Then
 				$CountSearchResc = 0
 				ExitLoop
-;~ 				CommandCariGold()
+				CommandCariGold()
 			EndIf
 			PesanKonsol("Maksimum Stack Reach", "Switch")
 			;Coba Reset Web While Counting Limit
@@ -234,6 +239,7 @@ Func CommandCariResource()
 			CommandCariGold()
 		EndIf
 		;Coba Reset Web While Counting Limit
+
 		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionBig.bmp", 1, $xPosReset, $yPosReset, 60)
 		If $ResetRefresh = 1 Then
 			PesanKonsol("Refreshing Web")
@@ -283,7 +289,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case 2 ; 15min
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Simple Tools)")
 				Do
@@ -302,7 +307,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case 3 ; 1hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Bread)")
 				Do
@@ -321,7 +325,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case 4 ; 3hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Advanced Tools)")
 				Do
@@ -340,7 +343,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case 5 ; 9hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Basket Of Groceries)")
 				Do
@@ -359,7 +361,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case 6 ; 1day
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Toolbox)")
 				Do
@@ -378,7 +379,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 			Case Else ; Jika di Settingan tidak ada Nilai
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobFromConfig & "(Beverage)")
 				Do
@@ -397,7 +397,6 @@ Func CommandCariResource()
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
 				Until $PilihanJob = 1
-
 		EndSwitch
 
 		If $PilihanJob = 1 Then
@@ -989,12 +988,8 @@ Func CommandCariScroll()
 	$yJob = 0
 	$NumScroll = 0
 	Do
-		If $boolSearchArea = 1 Then
-			$CariScroll = _ImageSearchArea( $ArrayImgScrollSilk[$iScrol], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xScrol, $yScrol, 70)
-		Else
-			$CariScroll = _ImageSearch( $ArrayImgScrollSilk[$iScrol], 1, $iScrol, $yScrol, 70)
-		EndIf
-		Sleep(100)
+		$CariScroll = _ImageSearchArea( $ArrayImgScrollSilk[$iScrol], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xScrol, $yScrol, 75)
+ 		Sleep(100)
 		$iScrol += 1
 		If $iScrol = 4 Then $iScrol = 0
 		$CountSearchScroll += 1
@@ -1092,7 +1087,46 @@ EndFunc
 
 Func CommandCariSilk()
 	$iSilk = 0
-	$
+	$CountSearchSilk = 0
+	$xSilk = 0
+	$ySilk = 0
+	$CountJob = 0
+	Do
+		$CariSilk = _ImageSearchArea( $ArrayImgScroll[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xRes, $yRes, 75)
+		$iSilk += 1
+		If $iSilk = 1 Then $iSilk = 0
+		$CountSearchSilk += 1
+		Sleep(Int($dSrcLoop))
+		PesanKonsol("Searching Resource", "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
+		$LimitFindSilk = IniRead($hfileSetting, "SettingAplikasi", "LimitFindSilk", 100)
+		If $CountSearchSilk = Int($LimitFindSilk) Then
+			PesanKonsol("Maximun Stack Silk Reach", "Switch Searchs to Resources")
+			CommandCariResource()
+		EndIf
+	Until $CariSilk = 1
+	If $CariSilk = 1 Then
+		Sleep(100)
+		PesanKonsol("Silk Found", "Using Image: " & $iSilk & " PosX: " & $xSilk & " PosY: " & $ySilk)
+		MouseClick("primary", $ySilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
+		$TotalPickSilks += 1
+		MouseMove(105, 404, 5)
+		PesanKonsol("Collecting Silk", "PosX: " & $xSilk & " PosY: " & $ySilk & " Total Silk Collected: " & $TotalPickSilks)
+		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
+
+		$GetJobSilk = IniRead( $hfilesetting, "SetupJob", "Silk", 1)
+		$PickJobSilk = 0
+		Switch $GetJobSilk
+			Case 1
+
+			Case 2
+
+			Case 3
+
+			Case Else
+
+		EndSwitch
+
+
 EndFunc
 
 Func CommandRestart()
