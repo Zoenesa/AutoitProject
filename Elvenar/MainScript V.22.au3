@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.24.2
+#AutoIt3Wrapper_Res_Fileversion=17.2.24.3
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -16,6 +16,7 @@
 #include "ImageSearch.au3"
 #include "modul\fileglobal.au3"
 #include <File.au3>
+#include <Date.au3>
 
 Opt( "MouseClickDelay", 10)
 
@@ -122,11 +123,21 @@ Global $UPosYSilk
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
 If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$hFileOpen = FileOpen(@ScriptDir & "\log\Elvenar.log", 0)
-	$hFileRead = FileRead($hFileOpen)
-	_WinApi_SetConsoleTitle($hFileRead)
+	$hFileRead = FileReadToArray($hFileOpen)
+	;" [R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
+	$TotalPickResources = Int($hFileRead[1])
+	$TotalPickGolds = Int($hFileRead[2])
+	$TotalPickMetals = Int($hFileRead[3])
+	$TotalPickPlanks = Int($hFileRead[4])
+	$TotalPickMarbles = Int($hFileRead[5])
+	$TotalPickCrystals = Int($hFileRead[6])
+	$TotalPickScrolls = Int($hFileRead[7])
+	$TotalPickSilks = Int($hFileRead[8])
+	$tempTitle = "Elvenar AutoClick Log [R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "]"
+	_WinApi_SetConsoleTitle($tempTitle)
 	FileClose($hFileOpen)
 Else
-_WinApi_SetConsoleTitle("Elvenar AutoClick Log")
+_WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:0; Cr:0; Sc:0; Sl:0]")
 EndIf
 WinSetOnTop( "Elvenar AutoClick Log", "", 1)
 WinSetTrans( "Elvenar AutoClick Log", "", 200)
@@ -707,7 +718,7 @@ Func CommandCariMetal()
 	#EndRegion
 	#Region Loop Pencarian Metal
 	Do
- 		$CariMetal = _ImageSearchArea( $ArrayImgFindMetal[$iMetal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMetal, $yMetal, 95)
+ 		$CariMetal = _ImageSearchArea( $ArrayImgFindMetal[$iMetal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMetal, $yMetal, 97)
  		$iMetal += 1
 		$CountSearchMetal += 1
 		If $iMetal = 4 Then $iMetal = 0
@@ -1297,7 +1308,7 @@ Func CommandCariSilk()
 	$ySilk = 0
 	$CountJob = 0
 	Do
-		$CariSilk = _ImageSearchArea( $ArrayImgScroll[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xSilk, $ySilk, 75)
+		$CariSilk = _ImageSearchArea( $ArrayImgScroll[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xSilk, $ySilk, 85)
 		$iSilk += 1
 		If $iSilk = 1 Then $iSilk = 0
 		$CountSearchSilk += 1
@@ -1481,6 +1492,33 @@ Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSl
 	DllCall( "Kernel32.dll", "bool", "AllocConsole")
 	_WinApi_SetConsoleTitle($tSetTitle)
 	DllClose("Kernel32.dll")
+
+	If Not FileExists(@ScriptDir & "\log\Elvenar.log") Then
+		_FileCreate( @ScriptDir & "\log\Elvenar.log")
+		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tres)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tGold)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMetal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tPlank)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMarb)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tCry)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSco)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSlk)
+		FileClose(@ScriptDir & "\log\Elvenar.log")
+	Else
+		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tres)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tGold)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMetal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tPlank)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMarb)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tCry)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSco)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSlk)
+		FileClose(@ScriptDir & "\log\Elvenar.log")
+	EndIf
 EndFunc
 
 Func CommandWriteLog()
@@ -1488,11 +1526,27 @@ Func CommandWriteLog()
 	If Not FileExists(@ScriptDir & "\log\Elvenar.log") Then
 		_FileCreate( @ScriptDir & "\log\Elvenar.log")
 		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
-		FileWrite( @ScriptDir & "\log\Elvenar.log", $tempTitle)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickResources)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickGolds)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickMetals)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickPlanks)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickMarbles)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickCrystals)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickScrolls)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickSilks)
 		FileClose(@ScriptDir & "\log\Elvenar.log")
 	Else
 		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
-		FileWrite( @ScriptDir & "\log\Elvenar.log", $tempTitle)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickResources)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickGolds)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickMetals)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickPlanks)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickMarbles)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickCrystals)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickScrolls)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $TotalPickSilks)
 		FileClose(@ScriptDir & "\log\Elvenar.log")
 	EndIf
 	Local $hLogRead = FileRead( @ScriptDir & "\log\Elvenar.log")
