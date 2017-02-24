@@ -15,6 +15,7 @@
 
 #include "ImageSearch.au3"
 #include "modul\fileglobal.au3"
+#include <File.au3>
 
 Opt( "MouseClickDelay", 10)
 
@@ -113,13 +114,20 @@ Global $UPosYSilk
 	HotKeySet("^{NUMPAD4}","CommandCariPlank")
 	HotKeySet("^{NUMPAD5}","CommandCariMarble")
 	HotKeySet("^{NUMPAD6}","CommandCariScroll")
-	HotKeySet("^+{NUMPAD7}","CommandCariSilk")
+	HotKeySet("^{NUMPAD7}","CommandCariSilk")
 	HotKeySet("^+g","ReadSettingan")
-;~ 	HotKeySet("^+{NUMPAD9}","CommandCariResource")
+	HotKeySet("^{NUMPAD9}","CommandWriteLog")
 #EndRegion
 
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
+If FileExists(@ScriptDir & "\log\Elvenar.log") Then
+	$hFileOpen = FileOpen(@ScriptDir & "\log\Elvenar.log", 0)
+	$hFileRead = FileRead($hFileOpen)
+	_WinApi_SetConsoleTitle($hFileRead)
+	FileClose($hFileOpen)
+Else
 _WinApi_SetConsoleTitle("Elvenar AutoClick Log")
+EndIf
 WinSetOnTop( "Elvenar AutoClick Log", "", 1)
 WinSetTrans( "Elvenar AutoClick Log", "", 200)
 WinMove( "Elvenar AutoClick Log", "", 720, 4, 640, 95, 3)
@@ -206,15 +214,15 @@ Func ReadSettingan()
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelaySearchImage", "Key: SearchImage; Value: " & $DelaySearchImage)
 	;------------------2
-	$DelayPickRes = IniRead($hFileSetting, "DelayTiming","Resource", 400)
+	$DelayPickRes = IniRead($hFileSetting, "DelayTiming","Resource", 200)
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelayPickRes", "Key: Resource; Value: " & $DelayPickRes)
 	;------------------3
-	$DelayPickJob = IniRead($hFileSetting, "DelayTiming", "PickJob", 400)
+	$DelayPickJob = IniRead($hFileSetting, "DelayTiming", "PickJob", 100)
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelayPickJob", "Key: PickJob; Value: " & $DelayPickJob)
 	;------------------4
-	$DelayGetJob = IniRead($hFileSetting, "DelayTiming", "GetJob", 400)
+	$DelayGetJob = IniRead($hFileSetting, "DelayTiming", "GetJob", 200)
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelayGetJob", "Key: GetJob; Value: " & $DelayGetJob)
 	#EndRegion
@@ -361,6 +369,7 @@ Func ReadSettingan()
 	PesanKonsol("Read Settingan $UPosYSilk", "Key: PickYSilk; Value: " & $UPosYSilk)
 	;------------------17
 	#EndRegion
+	Return 1
 EndFunc
 
 Func WriteSetingan()
@@ -384,7 +393,7 @@ Func CenteringScreen()
 EndFunc
 
 Func CommandCariResource()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi Sub
 	$iResc = 0
 	$CountSearchResc = 0
@@ -607,7 +616,7 @@ Func CommandCariResource()
 EndFunc
 
 Func CommandCariGold()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi
 	$iGold = 0
 	$CountSearchGold = 0
@@ -685,7 +694,7 @@ Func CommandCariGold()
 EndFunc
 
 Func CommandCariMetal()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi Sub Cari Metal
 	$iMetal = 0
 	$xMetal = 0
@@ -807,7 +816,7 @@ Func CommandCariMetal()
 EndFunc
 
 Func CommandCariCrystal()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi
 	$iCrystal = 0
 	$xCrystal = 0
@@ -928,7 +937,7 @@ Func CommandCariCrystal()
 EndFunc
 
 Func CommandCariPlank()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi
 	$xPlank = 0
 	$yPlank = 0
@@ -1054,7 +1063,7 @@ Func CommandCariPlank()
 EndFunc
 
 Func CommandCariMarble()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	#Region Deklarasi
 	$iMarble = 0
 	$CountSearchMarble = 0
@@ -1178,7 +1187,7 @@ Func CommandCariMarble()
 EndFunc
 
 Func CommandCariScroll()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	$xScrol = 0
 	$yScrol = 0
 	$iScrol = 0
@@ -1281,7 +1290,7 @@ Func CommandCariScroll()
 EndFunc
 
 Func CommandCariSilk()
-	ReadSettingan()
+;~ 	ReadSettingan()
 	$iSilk = 0
 	$CountSearchSilk = 0
 	$xSilk = 0
@@ -1293,7 +1302,7 @@ Func CommandCariSilk()
 		If $iSilk = 1 Then $iSilk = 0
 		$CountSearchSilk += 1
 		Sleep(Int($DelaySearchImage))
-		PesanKonsol("Searching Resource", "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
+		PesanKonsol("Searching Silk Limit: " & $LimitFindSilk, "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
 		$LimitFindSilk = IniRead($hFileSetting, "SettingAplikasi", "LimitFindSilk", 100)
 		If $CountSearchSilk = Int($LimitFindSilk) Then
 			PesanKonsol("Maximun Stack Silk Reach", "Switch Searchs to Resources")
@@ -1395,7 +1404,7 @@ EndFunc
 Func CommandRestart()
 	Sleep(Random(1000, 3000))
 	ShellExecute(@ScriptFullPath)
-	Exit
+	CommandExit()
 EndFunc
 
 Func PesanKonsol( $refMsg, $refComment = " ")
@@ -1463,14 +1472,30 @@ Func CommandSetPosisiKota()
 	Sleep(800)
 EndFunc
 
+Global $tSetTitle
 Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk,  $CurrTitle = "Elvenar AutoClick Log")
 	Sleep(300)
 	Local $AddTitle = " [R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
-	Local $tSetTitle = $CurrTitle & $addTitle
+	$tSetTitle = $CurrTitle & $addTitle
 ;~ 	WinSetTitle( $CurrTitle, "", $tSetTitle)
 	DllCall( "Kernel32.dll", "bool", "AllocConsole")
 	_WinApi_SetConsoleTitle($tSetTitle)
 	DllClose("Kernel32.dll")
+EndFunc
+
+Func CommandWriteLog()
+	Local $tempTitle = $tSetTitle
+	If Not FileExists(@ScriptDir & "\log\Elvenar.log") Then
+		_FileCreate( @ScriptDir & "\log\Elvenar.log")
+		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
+		FileWrite( @ScriptDir & "\log\Elvenar.log", $tempTitle)
+		FileClose(@ScriptDir & "\log\Elvenar.log")
+	Else
+		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
+		FileWrite( @ScriptDir & "\log\Elvenar.log", $tempTitle)
+		FileClose(@ScriptDir & "\log\Elvenar.log")
+	EndIf
+	Local $hLogRead = FileRead( @ScriptDir & "\log\Elvenar.log")
 EndFunc
 
 Func CommandStartServer()
@@ -1517,6 +1542,7 @@ Func TogglePause()
 EndFunc
 
 Func CommandExit()
+	CommandWriteLog()
 	Exit 0
 EndFunc
 
