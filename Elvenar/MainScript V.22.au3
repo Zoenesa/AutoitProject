@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.24.3
+#AutoIt3Wrapper_Res_Fileversion=17.2.24.4
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -480,12 +480,12 @@ Func CommandCariResource()
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$GetJobResource = IniRead( $hFileSetting, "SetupJob", "Resource", 1)
-		$GetJobResource = 0
+		$PickJobResource = 0
 		Switch $GetJobResource
 			Case 1 ; 5min
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -499,11 +499,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case 2 ; 15min
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Simple Tools)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc6, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc6, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -517,11 +517,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case 3 ; 1hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Bread)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc7, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc7, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -535,11 +535,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case 4 ; 3hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Advanced Tools)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc8, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc8, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -553,11 +553,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case 5 ; 9hr
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Basket Of Groceries)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc9, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc9, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -571,11 +571,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case 6 ; 1day
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Toolbox)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc10, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc10, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -589,11 +589,11 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 			Case Else ; Jika di Settingan tidak ada Nilai
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)")
 				Do
-					$GetJobResource = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
+					$PickJobResource  = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
@@ -607,10 +607,10 @@ Func CommandCariResource()
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
-				Until $GetJobResource = 1
+				Until $PickJobResource  = 1
 		EndSwitch
 
-		If $GetJobResource = 1 Then
+		If $PickJobResource  = 1 Then
 			Sleep(Int($DelayPickJob))
 			MouseClick( "primary", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found Count: " & $CountJob, "Start Pick Job: " & $GetJobResource)
