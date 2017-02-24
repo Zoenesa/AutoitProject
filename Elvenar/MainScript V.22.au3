@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.23.11
+#AutoIt3Wrapper_Res_Fileversion=17.2.24.2
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -38,11 +38,20 @@ Local $SearchAreaLeft
 Local $SearchAreaRight
 Local $SearchAreaBottom
 
+Local $GetJobResource
+Local $GetJobMetal
+Local $GetJobCrystal
+Local $GetJobPlank
+Local $GetJobMarble
+Local $GetJobScroll
+Local $GetJobSilk
+
 ;Set Posisi Window
 Local $StartPointerPosition
 Local $DelaySearchImage
 Local $DelayPickRes
 Local $DelayPickJob
+Local $DelayGetJob
 
 ;Maks Stack Objek
 Local $ResidenceStack
@@ -61,6 +70,7 @@ Local $MetalFound = 0
 Local $xRes = 0, $yRes = 0, $xJob = 0, $yJob = 0, $xPosReset = 0, $yPosReset = 0
 Local $xGold = 0, $yGold = 0, $xServer = 0, $yServer = 0
 Local $CountJob = 0, $GoldFailClickX = 0, $GoldFailClickY = 0
+
 Global $TotalPickResources = 0
 Global $TotalPickGolds = 0
 Global $TotalPickMetals = 0
@@ -118,59 +128,239 @@ DllClose("Kernel32.dll")
 ReadSettingan()
 
 Func ReadSettingan()
+	#Region Read Setup Job
+	Sleep(100)
+	PesanKonsol("Read Settingan", "Section [SetupJob]")
 
-	$ResidenceStack = IniRead($hFileSetting, "TotalBuilding", "Residence", 19)
-	$ResourceStack = IniRead($hFileSetting, "TotalBuilding", "WorkShop", 6)
-	$MetalStack = IniRead($hFileSetting, "TotalBuilding", "Steel", 5)
-	$PlankStack = IniRead($hFileSetting, "TotalBuilding", "Plank", 4)
-	$MarbleStack = IniRead($hFileSetting, "TotalBuilding", "Marble", 5)
-	$CrystalStack = IniRead($hFileSetting, "TotalBuilding", "Crystal", 2)
-	$ScrollStack = IniRead($hFileSetting, "TotalBuilding", "Scrolls", 1)
-	$SilkStack = IniRead($hFileSetting, "TotalBuilding", "Silk", 1)
-	$ReadServer = IniRead($hFileSetting, "SettingAplikasi", "Server1", "Arendyll")
-	$multiServer = IniRead($hFileSetting, "SettingAplikasi", "multiserver", 0)
 	$GetJobResource = IniRead($hFileSetting, "SetupJob", "Resource", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobResource", "Key: Resource; Value: " & $GetJobResource)
+	;------------------1
 	$GetJobMetal = IniRead($hFileSetting, "SetupJob", "Metal", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobResource", "Key: Metal; Value: " & $GetJobMetal)
+	;------------------2
+	$GetJobCrystal = IniRead( $hFileSetting, "SetupJob", "Crystal", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobCrystal", "Key: Crystal; Value: " & $GetJobCrystal)
+	;------------------3
+	$GetJobPlank = IniRead( $hFileSetting, "SetupJob", "Plank", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobPlank", "Key: Plank; Value: " & $GetJobPlank)
+	;------------------4
+	$GetJobMarble = IniRead( $hFileSetting, "SetupJob", "Marble", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobMarble", "Key: Marble; Value: " & $GetJobMarble)
+	;------------------5
+	$GetJobScroll = Iniread( $hFileSetting, "SetupJob", "Scroll", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobScroll", "Key: Scroll; Value: " & $GetJobScroll)
+	;------------------6
+	$GetJobSilk = IniRead( $hFileSetting, "SetupJob", "Silk", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $GetJobSilk", "Key: Silk; Value: " & $GetJobSilk)
+	#EndRegion
 
-	$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
-	$LimitFindGold = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGold", 90)
-	$LimitFindMetal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMetal", 100)
-	$LimitFindPlank = IniRead($hFileSetting, "SettingAplikasi", "LimitFindPlank", 100)
-	$LimitFindMarble = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMarble", 100)
-	$LimitFindCrystal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindCrystal", 100)
-	$LimitFindScroll = IniRead($hFileSetting, "SettingAplikasi", "LimitFindScroll", 100)
-	$LimitFindSilk = IniRead($hFileSetting, "SettingAplikasi", "LimitFindSilk", 100)
+	#Region Total Building
+	Sleep(1000)
+	PesanKonsol( "Read Setingan", "Section [TotalBuilding]")
+	;------------------1
+	$ResidenceStack = IniRead($hFileSetting, "TotalBuilding", "Residence", 19)
+	Sleep(100)
+	PesanKonsol("Read Settingan $ResidenceStack", "Key: Residence; Value: " & $ResidenceStack)
+	;------------------2
+	$ResourceStack = IniRead($hFileSetting, "TotalBuilding", "WorkShop", 6)
+	Sleep(100)
+	PesanKonsol("Read Settingan $ResourceStack", "Key: WorkShop; Value: " & $ResourceStack)
+	;------------------3
+	$MetalStack = IniRead($hFileSetting, "TotalBuilding", "Steel", 5)
+	Sleep(100)
+	PesanKonsol("Read Settingan $MetalStack", "Key: Steel; Value: " & $MetalStack)
+	;------------------4
+	$CrystalStack = IniRead($hFileSetting, "TotalBuilding", "Crystal", 2)
+	Sleep(100)
+	PesanKonsol("Read Settingan $CrystalStack", "Key: Crystal; Value: " & $CrystalStack)
+	;------------------5
+	$PlankStack = IniRead($hFileSetting, "TotalBuilding", "Plank", 4)
+	Sleep(100)
+	PesanKonsol("Read Settingan $PlankStack", "Key: Plank; Value: " & $PlankStack)
+	;------------------9
+	$MarbleStack = IniRead($hFileSetting, "TotalBuilding", "Marble", 5)
+	Sleep(100)
+	PesanKonsol("Read Settingan $MarbleStack", "Key: Marble; Value: " & $MarbleStack)
+	;------------------7
+	$ScrollStack = IniRead($hFileSetting, "TotalBuilding", "Scrolls", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $ScrollStack", "Key: Scrolls; Value: " & $ScrollStack)
+	;------------------8
+	$SilkStack = IniRead($hFileSetting, "TotalBuilding", "Silk", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $SilkStack", "Key: Silk; Value: " & $SilkStack)
+	#EndRegion
 
-	$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
-	$boolSearchArea = IniRead($hFileSetting, "SettingAplikasi", "SearchArea", 1)
-	$SearchAreaTop = IniRead($hFileSetting, "SettingAplikasi", "TopX", 176)
-	$SearchAreaLeft = IniRead($hFileSetting, "SettingAplikasi", "TopY", 206)
-	$SearchAreaRight = IniRead($hFileSetting, "SettingAplikasi", "wRight", 1298)
-	$SearchAreaBottom = IniRead($hFileSetting, "SettingAplikasi", "hBottom", 730)
-
-	$StartPointerPosition = IniRead($hFileSetting, "SettingAplikasi", "PointerWin", 0)
+	#Region Delay Timing
+	Sleep(1000)
+	PesanKonsol("Read Settingan", "Section [DelayTiming]")
+	;------------------1
 	$DelaySearchImage = IniRead($hFileSetting, "DelayTiming", "SearchImage", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $DelaySearchImage", "Key: SearchImage; Value: " & $DelaySearchImage)
+	;------------------2
 	$DelayPickRes = IniRead($hFileSetting, "DelayTiming","Resource", 400)
+	Sleep(100)
+	PesanKonsol("Read Settingan $DelayPickRes", "Key: Resource; Value: " & $DelayPickRes)
+	;------------------3
 	$DelayPickJob = IniRead($hFileSetting, "DelayTiming", "PickJob", 400)
+	Sleep(100)
+	PesanKonsol("Read Settingan $DelayPickJob", "Key: PickJob; Value: " & $DelayPickJob)
+	;------------------4
 	$DelayGetJob = IniRead($hFileSetting, "DelayTiming", "GetJob", 400)
+	Sleep(100)
+	PesanKonsol("Read Settingan $DelayGetJob", "Key: GetJob; Value: " & $DelayGetJob)
+	#EndRegion
 
+	#Region SettingAplikasi
+	Sleep(1000)
+	PesanKonsol("Read Settingan", "Section [SettingAplikasi]")
+	;------------------1
+	$multiServer = IniRead($hFileSetting, "SettingAplikasi", "multiserver", 0)
+	Sleep(100)
+	PesanKonsol("Read Settingan $multiServer", "Section: SettingAplikasi " & "; Key: multiserver; Value: " & $multiServer)
+	;------------------2
+	$ReadServer = IniRead($hFileSetting, "SettingAplikasi", "Server1", "Arendyll")
+	Sleep(100)
+	PesanKonsol("Read Settingan $ReadServer", "Section: SettingAplikasi " & "; Key: Server1; Value: " & $ReadServer)
+	;------------------3
+	$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindResource", "Key: LimitFindResource; Value: " & $LimitFindResource)
+	;------------------4
+	$LimitFindGold = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGold", 90)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindGold", "Key: LimitFindGold; Value: " & $LimitFindGold)
+	;------------------5
+	$LimitFindMetal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMetal", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindMetal", "Key: $LimitFindMetal; Value: " & $LimitFindMetal)
+	;------------------6
+	$LimitFindPlank = IniRead($hFileSetting, "SettingAplikasi", "LimitFindPlank", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindPlank", "Key: $LimitFindPlank; Value: " & $LimitFindPlank)
+	;------------------7
+	$LimitFindMarble = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMarble", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindMarble", "Key: LimitFindMarble; Value: " & $LimitFindMarble)
+	;------------------8
+	$LimitFindCrystal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindCrystal", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindCrystal", "Key: LimitFindCrystal; Value: " & $LimitFindCrystal)
+	;------------------9
+	$LimitFindScroll = IniRead($hFileSetting, "SettingAplikasi", "LimitFindScroll", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindScroll", "Key: LimitFindScroll; Value: " & $LimitFindScroll)
+	;------------------10
+	$LimitFindSilk = IniRead($hFileSetting, "SettingAplikasi", "LimitFindSilk", 100)
+	Sleep(100)
+	PesanKonsol("Read Settingan $LimitFindSilk", "Key: LimitFindSilk; Value: " & $LimitFindSilk)
+	;------------------11
+	$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $OnlySearchResource", "Key: OnlyResource; Value: " & $OnlySearchResource)
+	;------------------12
+	$boolSearchArea = IniRead($hFileSetting, "SettingAplikasi", "SearchArea", 1)
+	Sleep(100)
+	PesanKonsol("Read Settingan $boolSearchArea", "Key: SearchArea; Value: " & $boolSearchArea)
+	;------------------13
+	$SearchAreaTop = IniRead($hFileSetting, "SettingAplikasi", "TopX", 176)
+	Sleep(100)
+	PesanKonsol("Read Settingan $SearchAreaTop", "Key: TopX; Value: " & $SearchAreaTop)
+	;------------------14
+	$SearchAreaLeft = IniRead($hFileSetting, "SettingAplikasi", "TopY", 206)
+	Sleep(100)
+	PesanKonsol("Read Settingan $SearchAreaLeft", "Key: TopY; Value: " & $SearchAreaLeft)
+	;------------------15
+	$SearchAreaRight = IniRead($hFileSetting, "SettingAplikasi", "wRight", 1298)
+	Sleep(100)
+	PesanKonsol("Read Settingan $SearchAreaRight", "Key: wRight; Value: " & $SearchAreaRight)
+	;------------------16
+	$SearchAreaBottom = IniRead($hFileSetting, "SettingAplikasi", "hBottom", 730)
+	Sleep(100)
+	PesanKonsol("Read Settingan $SearchAreaBottom", "Key: hBottom; Value: " & $SearchAreaBottom)
+	;------------------17
+	$StartPointerPosition = IniRead($hFileSetting, "SettingAplikasi", "PointerWin", 0)
+	Sleep(100)
+	PesanKonsol("Read Settingan $StartPointerPosition", "Key: PointerWin; Value: " & $StartPointerPosition)
+	#EndRegion
+
+	#Region CoordinateUserPick
+	Sleep(1000)
+	PesanKonsol("Read Settingan", "Section CoordinateUserPick")
+	;------------------1
 	$UPosXRes = IniRead($hFileSetting, "CoordinateUserPick", "PickXResource", 8)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXRes", "Key: PickXResource; Value: " & $UPosXRes)
+	;------------------2
 	$UPosYRes = IniRead($hFileSetting, "CoordinateUserPick", "PickYResource", 65)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYRes", "Key: GetJob; PickYResource: " & $UPosYRes)
+	;------------------3
 	$UPosXGold = IniRead($hFileSetting, "CoordinateUserPick", "PickXGold", 10)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXGold", "Key: PickXGold; Value: " & $UPosXGold)
+	;------------------4
 	$UPosYGold = IniRead($hFileSetting, "CoordinateUserPick", "PickYGold", 70)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYGold", "Key: PickYGold; Value: " & $UPosYGold)
+	;------------------5
 	$UPosXMetal = IniRead($hFileSetting, "CoordinateUserPick", "PickXMetal", 6)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXMetal", "Key: PickXMetal; Value: " & $UPosXMetal)
+	;------------------6
 	$UPosYMetal = IniRead($hFileSetting, "CoordinateUserPick", "PickYMetal", 75)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYMetal", "Key: PickYMetal; Value: " & $UPosYMetal)
+	;------------------7
 	$UPosXPlank = IniRead($hFileSetting, "CoordinateUserPick", "PickXPlank", 10)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXPlank", "Key: PickXPlank; Value: " & $UPosXPlank)
+	;------------------8
 	$UPosYPlank = IniRead($hFileSetting, "CoordinateUserPick", "PickYPlank", 70)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYPlank", "Key: PickYPlank; Value: " & $UPosYPlank)
+	;------------------9
 	$UPosXMarble = IniRead($hFileSetting, "CoordinateUserPick", "PickXMarble", 4)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXMarble", "Key: PickXMarble; Value: " & $UPosXMarble)
+	;------------------10
 	$UPosYMarble = IniRead($hFileSetting, "CoordinateUserPick", "PickYMarble", 70)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYMarble", "Key: PickYMarble; Value: " & $UPosYMarble)
+	;------------------11
 	$UPosXCrystal = IniRead($hFileSetting, "CoordinateUserPick", "PickXCrystal", 5)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXCrystal", "Key: PickXCrystal; Value: " & $UPosXCrystal)
+	;------------------12
 	$UPosYCrystal = IniRead($hFileSetting, "CoordinateUserPick", "PickYCrystal", 75)
-	$UPosXScroll = IniRead($hFileSetting, "CoordinateUserPick", "PickX", 0)
-	$UPosYScroll = IniRead($hFileSetting, "CoordinateUserPick", "PickY", 60)
-	$UPosXSilk = IniRead( $hFileSetting, "CoordinateUserPick", "PickX", 5)
-	$UPosYSilk = IniRead( $hFileSetting, "CoordinateUserPick", "PickY", 70)
-
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYCrystal", "Key: PickYCrystal; Value: " & $UPosYCrystal)
+	;------------------13
+	$UPosXScroll = IniRead($hFileSetting, "CoordinateUserPick", "PickXScroll", 0)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosXScroll", "Key: ; Value: " & $UPosXScroll)
+	;------------------14
+	$UPosYScroll = IniRead($hFileSetting, "CoordinateUserPick", "PickYScroll", 60)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYScroll", "Key: PickYScroll; Value: " & $UPosYScroll)
+	;------------------15
+	$UPosXSilk = IniRead( $hFileSetting, "CoordinateUserPick", "PickXSilk", 5)
+	Sleep(100)
+	PesanKonsol("Read Settingan ", "Key: PickXSilk; Value: " & $UPosXSilk)
+	;------------------16
+	$UPosYSilk = IniRead( $hFileSetting, "CoordinateUserPick", "PickYSilk", 70)
+	Sleep(100)
+	PesanKonsol("Read Settingan $UPosYSilk", "Key: PickYSilk; Value: " & $UPosYSilk)
+	;------------------17
+	#EndRegion
 EndFunc
 
 Func WriteSetingan()
@@ -756,7 +946,7 @@ Func CommandCariPlank()
 		If $iPlank = 4 Then $iPlank = 0
 		Sleep(Int($DelaySearchImage))
 		PesanKonsol("Searching Plank", "Count: " & $CountSearchPlank & " Using Image: " & $iPlank)
-		$LimitFindPlank =
+		$LimitFindPlank = IniRead($hFileSetting, "SettingAplikasi", "LimitFindPlank", 100)
 		If $CountSearchPlank = Int($LimitFindPlank) Then
 			PesanKonsol("Maksimum Stack Reach", "Switch")
 			CommandCariMarble()
@@ -995,7 +1185,7 @@ Func CommandCariScroll()
 		$iScrol += 1
 		If $iScrol = 1 Then $iScrol = 0
 		$CountSearchScroll += 1
-		PesanKonsol("Searching Scroll", "Count: " & $CountSearchScroll & " Using Image: " & $iSilk)
+		PesanKonsol("Searching Scroll", "Count: " & $CountSearchScroll & " Using Image: " & $iScrol)
 		$LimitFindScroll = IniRead($hFileSetting, "SettingAplikasi", "LimitFindScroll", 100)
 		If $CountSearchScroll = Int($LimitFindScroll) Then
 			CommandCariSilk()
@@ -1129,7 +1319,7 @@ Func CommandCariSilk()
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
-				Until $PickJobMetal = 1
+				Until $PickJobSilk = 1
 			Case 2
 				PesanKonsol("Searching Job For Silk", "Using Job: " & $GetJobSilk & "()")
 				Do
@@ -1145,7 +1335,7 @@ Func CommandCariSilk()
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
-				Until $PickJobMetal = 1
+				Until $PickJobSilk = 1
 			Case 3
 				PesanKonsol("Searching Job For Silk", "Using Job: " & $GetJobSilk & "()")
 				Do
@@ -1161,7 +1351,7 @@ Func CommandCariSilk()
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
-				Until $PickJobMetal = 1
+				Until $PickJobSilk = 1
 			Case Else
 				PesanKonsol("Searching Job For Silk", "Using Job: " & $GetJobSilk & "()")
 				Do
@@ -1177,12 +1367,12 @@ Func CommandCariSilk()
 						MouseMove(103, 404, 3)
 						$CountJob = 0
 					EndIf
-				Until $PickJobMetal = 1
+				Until $PickJobSilk = 1
 		EndSwitch
 		If $GetJobSilk = 1 Then
 			Sleep(Int($DelayPickJob))
 			MouseClick( "primary", $xJob, $yJob, 1, 10)
-			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " & $GetJobMetal)
+			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " & $GetJobSilk)
 			Sleep(200)
 			MouseMove(105,404,7)
 			$xSilk = 0
