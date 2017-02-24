@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.23.6
+#AutoIt3Wrapper_Res_Fileversion=17.2.23.7
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -441,12 +441,8 @@ Func CommandCariMetal()
 	#EndRegion
 	#Region Loop Pencarian Metal
 	Do
-		If $boolSearchArea = 1 Then
-			$CariMetal = _ImageSearchArea( $ArrayImgFindMetal[$iMetal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMetal, $yMetal, 90)
-		Else
-			$CariMetal = _ImageSearch( $ArrayImgFindMetal[$iMetal], 1, $xMetal, $yMetal, 90)
-		EndIf
-		$iMetal += 1
+ 		$CariMetal = _ImageSearchArea( $ArrayImgFindMetal[$iMetal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMetal, $yMetal, 95)
+ 		$iMetal += 1
 		$CountSearchMetal += 1
 		If $iMetal = 4 Then $iMetal = 0
 		Sleep(Int($DelaySearchJob))
