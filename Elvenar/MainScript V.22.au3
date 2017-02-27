@@ -1,13 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
 #AutoIt3Wrapper_Outfile=MainScript V.22.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.22_X64.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.26_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
-#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker
-#AutoIt3Wrapper_Res_Fileversion=17.2.24.4
+#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
+#AutoIt3Wrapper_Res_Fileversion=17.2.26.4
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -22,8 +22,6 @@ Opt( "MouseClickDelay", 10)
 
 #Region Deklarasi
 Global $Paused
-
-Global $hFileSetting = @ScriptDir & "\config\Config.ini"
 
 Local Static $LimitFindResource
 Local Static $LimitFindGold
@@ -145,14 +143,15 @@ _WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:
 EndIf
 WinSetOnTop( "Elvenar AutoClick Log", "", 1)
 WinSetTrans( "Elvenar AutoClick Log", "", 200)
-WinMove( "Elvenar AutoClick Log", "", 720, 4, 640, 95, 3)
+WinMove( "Elvenar AutoClick Log", "", 541, 0, 797, 105, 3)
 DllClose("Kernel32.dll")
 
 ReadSettingan()
 
 Func ReadSettingan()
+	Global $hFileSetting = @ScriptDir & "\config\Config.ini"
 	#Region Read Setup Job
-	Sleep(10)
+	Sleep(500)
 	PesanKonsol("Read Settingan", "Section [SetupJob]")
 
 	$GetJobResource = IniRead($hFileSetting, "SetupJob", "Resource", 1)
@@ -185,7 +184,7 @@ Func ReadSettingan()
 	#EndRegion
 
 	#Region Total Building
-	Sleep(100)
+	Sleep(500)
 	PesanKonsol( "Read Setingan", "Section [TotalBuilding]")
 	;------------------1
 	$ResidenceStack = IniRead($hFileSetting, "TotalBuilding", "Residence", 19)
@@ -222,7 +221,7 @@ Func ReadSettingan()
 	#EndRegion
 
 	#Region Delay Timing
-	Sleep(100)
+	Sleep(500)
 	PesanKonsol("Read Settingan", "Section [DelayTiming]")
 	;------------------1
 	$DelaySearchImage = IniRead($hFileSetting, "DelayTiming", "SearchImage", 100)
@@ -233,7 +232,7 @@ Func ReadSettingan()
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelayPickRes", "Key: Resource; Value: " & $DelayPickRes)
 	;------------------3
-	$DelayPickJob = IniRead($hFileSetting, "DelayTiming", "PickJob", 100)
+	$DelayPickJob = IniRead($hFileSetting, "DelayTiming", "PickJob", 80)
 	Sleep(10)
 	PesanKonsol("Read Settingan $DelayPickJob", "Key: PickJob; Value: " & $DelayPickJob)
 	;------------------4
@@ -415,10 +414,10 @@ EndIf
 
 Func CenteringScreen()
 	Sleep(Random(2000,2600))
-	MouseMove( 650, 523, 3) ;1237, 602
+	MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3) ;1237, 602
 	Sleep(Random(500, 800))
 	MouseDown( "primary")
-	MouseMove( 617, 219, 20);1154, 265
+	MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);1154, 265
 	Sleep(100)
 	MouseUp( "primary")
 	CommandCariResource()
@@ -435,6 +434,9 @@ Func CommandCariResource()
 	$CountJob = 0
 	;Total Limit Searching Resource dari File Config
 	$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
+	$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
+	$GetJobResource = IniRead( $hFileSetting, "SetupJob", "Resource", 1)
+
 	#EndRegion
 	#Region Loop Pencarian Image
 	Do
@@ -442,31 +444,15 @@ Func CommandCariResource()
 		$iResc += 1
 		If $iResc = 4 Then $iResc = 0
 		$CountSearchResc += 1
-		Sleep(Int($DelaySearchImage))
+		Sleep(Int(Number($DelaySearchImage)))
 		PesanKonsol("Searching Resource, Limit: " & $LimitFindResource & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc)
 		If $CountSearchResc = Int($LimitFindResource) Then
-			$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
 			If $OnlySearchResource = 1 Then
 				$CountSearchResc = 0
 				ExitLoop
 				CommandCariGold()
 			EndIf
 			PesanKonsol("Maksimum Stack Reach", "Switch")
-			;Coba Reset Web While Counting Limit
-			$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionBig.bmp", 1, $xPosReset, $yPosReset, 60)
-			If $ResetRefresh = 1 Then
-				PesanKonsol("Refreshing Web")
-				$xPosReset = 0
-				$yPosReset = 0
-				Sleep(500)
-				$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
-				If $FindRefreshBtn = 1 Then
-					PesanKonsol("Executing To Home")
-					MouseClick( "primary", $xPosReset, $yPosReset, 10)
-					Sleep(Random(125000, 200000))
-					CommandSetPosisiKota()
-				Endif
-			Endif
 			;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 			PesanKonsol("Switch Searching Resource to Gold")
 			CommandCariGold()
@@ -494,22 +480,23 @@ Func CommandCariResource()
 ;		Tentukan Pencarian Berdasarkan User Config
 		Sleep(100)
 		PesanKonsol("Resource Found!", "Using Image: " & $iResc & "; PosX: " & $xRes & " PosY: " & $yRes)
-		Sleep(Int($DelayGetJob))
+;~ 		Sleep(Int(Number($DelayGetJob)))
+		Sleep(500)
 		MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
 		$TotalPickResources += 1
 		MouseMove(105, 403, 3)
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
-		$GetJobResource = IniRead( $hFileSetting, "SetupJob", "Resource", 1)
 		$PickJobResource = 0
 		Switch $GetJobResource
 			Case 1 ; 5min
 				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)")
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
-					Sleep(int($DelaySearchImage))
+					Sleep(Int(Number($DelayPickJob)))
+;~ 					Sleep(100)
 					$CountJob += 1
-					If $CountJob = 8 Then
+					If $CountJob = 4 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
@@ -1418,7 +1405,7 @@ Func CommandCariSilk()
 			$ySilk = 0
 			$xJob = 0
 			$yJob = 0
-			EndIf
+		EndIf
 	EndIf
 	CommandCariSilk()
 EndFunc
