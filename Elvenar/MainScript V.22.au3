@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=17.2.26.4
+#AutoIt3Wrapper_Res_Fileversion=17.2.26.5
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -101,6 +101,8 @@ Global $UPosYScroll
 Global $UPosXSilk
 Global $UPosYSilk
 
+Global $tSetTitle
+
 #EndRegion
 
 #Region Hotkey
@@ -120,6 +122,7 @@ Global $UPosYSilk
 	HotKeySet("^{NUMPAD7}","CommandCariSilk")
 	HotKeySet("^+g","ReadSettingan")
 	HotKeySet("^{NUMPAD9}","CommandWriteLog")
+	HotKeySet("{F7}","FindSponsorWnd")
 #EndRegion
 
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
@@ -147,6 +150,9 @@ WinMove( "Elvenar AutoClick Log", "", 541, 0, 797, 105, 3)
 DllClose("Kernel32.dll")
 
 ReadSettingan()
+
+Sleep(Random(10000, 20000))
+FindSponsorWnd()
 
 Func ReadSettingan()
 	Global $hFileSetting = @ScriptDir & "\config\Config.ini"
@@ -459,19 +465,14 @@ Func CommandCariResource()
 		EndIf
 		;Coba Reset Web While Counting Limit
 
-		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionBig.bmp", 1, $xPosReset, $yPosReset, 60)
+		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
 		If $ResetRefresh = 1 Then
 			PesanKonsol("Refreshing Web")
-			$xPosReset = 0
-			$yPosReset = 0
 			Sleep(500)
-			$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
-			If $FindRefreshBtn = 1 Then
-				PesanKonsol("Executing To Home")
-				MouseClick( "primary", $xPosReset, $yPosReset, 10)
-				Sleep(Random(125000, 200000))
-				CommandSetPosisiKota()
-			Endif
+			PesanKonsol("Executing To Home")
+			MouseClick( "primary", $xPosReset, $yPosReset, 10)
+			Sleep(Random(125000, 200000))
+			CommandSetPosisiKota()
 		Endif
 	Until $CariResource = 1
 	#EndRegion
@@ -661,12 +662,6 @@ Func CommandCariGold()
 		If $CountSearchGold = Int($LimitFindGold) Then
 			PesanKonsol( "Maximum Stack Gold Reach", "Executing Search for Metal")
 			;Coba Reset Web While Counting Limit
-			$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionBig.bmp", 1, $xPosReset, $yPosReset, 60)
-			If $ResetRefresh = 1 Then
-				PesanKonsol("Refreshing Web")
-				$xPosReset = 0
-				$yPosReset = 0
-				Sleep(500)
 				$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
 				If $FindRefreshBtn = 1 Then
 					PesanKonsol("Executing To Home")
@@ -674,25 +669,17 @@ Func CommandCariGold()
 					Sleep(Random(125000, 200000))
 					CommandSetPosisiKota()
 				Endif
-			Endif
 			;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 			PesanKonsol("Switch Searching Resource to Metal")
 			CommandCariMetal()
 		EndIf
 		;Coba Reset Web While Counting Limit
-		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionBig.bmp", 1, $xPosReset, $yPosReset, 60)
-		If $ResetRefresh = 1 Then
-			PesanKonsol("Refreshing Web")
-			$xPosReset = 0
-			$yPosReset = 0
-			Sleep(500)
-			$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
-			If $FindRefreshBtn = 1 Then
-				PesanKonsol("Executing To Home")
-				MouseClick( "primary", $xPosReset, $yPosReset, 10)
-				Sleep(Random(125000, 200000))
-				CommandSetPosisiKota()
-			Endif
+		$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
+		If $FindRefreshBtn = 1 Then
+			PesanKonsol("Executing To Home")
+			MouseClick( "primary", $xPosReset, $yPosReset, 10)
+			Sleep(Random(125000, 200000))
+			CommandSetPosisiKota()
 		Endif
 	Until $CariGold = 1
 	#EndRegion
@@ -1481,7 +1468,6 @@ Func CommandSetPosisiKota()
 	Sleep(800)
 EndFunc
 
-Global $tSetTitle
 Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk,  $CurrTitle = "Elvenar AutoClick Log")
 	Sleep(300)
 	Local $AddTitle = " [R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
@@ -1578,6 +1564,23 @@ Func CommandStartServer()
 		CommandSetPosisiKota()
 	Else
 		CommandSetPosisiKota()
+	EndIf
+EndFunc
+
+Func FindSponsorWnd()
+	$xtv = 0
+	$ytv = 0
+	PesanKonsol("Searching Sponsor Session Window")
+	$tvhwnd = WinGetHandle( "Sponsored session", "")
+	If WinExists( $tvhwnd) Then
+		$wndw = WinGetPos( $tvhwnd, "OK")
+		PesanKonsol("Result:" & $tvhwnd, "Pos " & "x: " & $wndw[0] & "y: " & $wndw[1])
+		Sleep(1000)
+		WinActivate( $tvhwnd)
+		Sleep(1000)
+		Send("{ENTER}")
+	Else
+		PesanKonsol("No Window")
 	EndIf
 EndFunc
 

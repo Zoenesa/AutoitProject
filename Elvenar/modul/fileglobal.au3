@@ -103,3 +103,5 @@ Global $imgHome4 = @ScriptDir & "\img\03Main\City2.bmp"
 Global $imgServer1 = $imgPathMain & "Arendyll.bmp"
 Global $imgServer2 = $imgPathMain & "Felyndral.bmp"
 Global $imgServer3 = $imgPathMain & "Winyandor.bmp"
+
+Global $imgTVhwnd = $imgPathMain & "tvOK.bmp"
