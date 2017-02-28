@@ -151,7 +151,10 @@ DllClose("Kernel32.dll")
 
 ReadSettingan()
 
-Sleep(Random(10000, 20000))
+Sleep(500)
+WinActivate("Elvenar - Fantasy City Builder Game")
+
+Sleep(30000)
 FindSponsorWnd()
 
 Func ReadSettingan()
@@ -1575,12 +1578,18 @@ Func FindSponsorWnd()
 	If WinExists( $tvhwnd) Then
 		$wndw = WinGetPos( $tvhwnd, "OK")
 		PesanKonsol("Result:" & $tvhwnd, "Pos " & "x: " & $wndw[0] & "y: " & $wndw[1])
-		Sleep(1000)
+		Sleep(800)
 		WinActivate( $tvhwnd)
-		Sleep(1000)
+		Sleep(800)
 		Send("{ENTER}")
+		Sleep(500)
+		WinActivate("Elvenar - Fantasy City Builder Game")
+		CommandSetPosisiKota()
 	Else
 		PesanKonsol("No Window")
+		Sleep(500)
+		WinActivate("Elvenar - Fantasy City Builder Game")
+		CommandSetPosisiKota()
 	EndIf
 EndFunc
 
