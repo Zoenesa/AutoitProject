@@ -87,9 +87,13 @@ Global $imgsrc40 = $imgPathCrystal & "Scroll.bmp"
 Global $imgsrc41 = $imgPathCrystal & "Scroll2.bmp"
 Global $imgsrc42 = $imgPathCrystal & "Silk.bmp"
 Global $imgsrc43 = $imgPathCrystal & "Silk2.bmp"
+Global $imgsrc44 = $imgPathCrystal & "Silksm.bmp"
+Global $imgsrc45 = $imgPathCrystal & "Silkvar.bmp"
+Global $imgsrc46 = $imgPathCrystal & "Scrollvar.bmp"
+Global $imgsrc47 = $imgPathCrystal & "Scrollw.bmp"
 
-Global $ArrayImgScrollSilk[4] = [$imgsrc40, $imgsrc41, $imgsrc42, $imgsrc43]
-Global $ArrayImgScroll[2] = [$imgsrc42, $imgsrc43]
+Global $ArrayImgScroll[4] = [$imgsrc40, $imgsrc41, $imgsrc46, $imgsrc47]
+Global $ArrayImgSilks[4] = [$imgsrc42, $imgsrc43, $imgsrc44, $imgsrc45]
 
 Global $imgCity1 = @ScriptDir & "\img\03Main\World.bmp"
 Global $imgCity2 = @ScriptDir & "\img\03Main\World2.bmp"

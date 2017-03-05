@@ -56,7 +56,9 @@ Func _ImageSearchArea($findImage, $resultPosition, $x1, $y1, $right, $bottom, By
     $array = StringSplit($result[0], "|")
     $x = Int(Number($array[2]))
     $y = Int(Number($array[3]))
+;~ 	ConsoleWrite("Array Position x: " & $array[2] & "y: " & $array[3] & @CRLF)
     If $resultPosition = 1 Then
+;~ 	ConsoleWrite("Result Position x: " & $array[4] & "y: " & $array[5] & @CRLF)
         $x = $x + Int(Number($array[4]) / 2)
         $y = $y + Int(Number($array[5]) / 2)
     EndIf
