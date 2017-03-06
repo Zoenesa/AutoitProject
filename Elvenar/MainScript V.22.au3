@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.22.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.26_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.17.3.5.1.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.17.3.5.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
@@ -13,12 +13,59 @@
 #AutoIt3Wrapper_Res_Language=1033
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#include "ImageSearch.au3"
+;~ #include "ImageSearch.au3"
 #include "modul\fileglobal.au3"
 #include <File.au3>
 #include <Date.au3>
 
 Opt( "MouseClickDelay", 10)
+
+Func _ImageSearch($RefImage, $resultPosition, ByRef $CordX, ByRef $CordY, $tolerance, $HBMP=0)
+   return _ImageSearchArea($RefImage, $resultPosition, 0, 0, @DesktopWidth, @DesktopHeight, $CordX, $CordY, $tolerance, $HBMP)
+EndFunc
+
+Func _ImageSearchArea($RefImage, $resultPosition, $CordX1, $CordY1, $right, $bottom, ByRef $CordX, ByRef $CordY, $tolerance, $HBMP = 0)
+    If $tolerance > 0 Then $RefImage = "*" & $tolerance & " " & $RefImage
+    If IsString($RefImage) Then
+        $result = DllCall("ImageSearchDLL.dll", "str", "ImageSearch", "int", $CordX1, "int", $CordY1, "int", $right, "int", $bottom, "str", $RefImage, "ptr", $HBMP)
+        $err = @error
+    Else
+        $result = DllCall("ImageSearchDLL.dll", "str", "ImageSearch", "int", $CordX1, "int", $CordY1, "int", $right, "int", $bottom, "ptr", $RefImage, "ptr", $HBMP)
+        $err = @error
+    EndIf
+    Switch $err
+        Case 1
+            ConsoleWriteError("unable to use the DLL file" & @CRLF)
+            exit 1
+        Case 2
+            ConsoleWriteError('unknown "return type" ' & @CRLF)
+            exit 1
+        Case 3
+            ConsoleWriteError('"ImageSearch" not found in DLL' & @CRLF)
+            exit 1
+        Case 4
+            ConsoleWriteError('bad number of parameters' & @CRLF)
+            exit 1
+        Case 5
+            ConsoleWriteError('bad parameter' & @CRLF)
+            exit 1
+    EndSwitch
+    ; If error exit
+    If $result[0] = "0" Then Return 0
+    ; Otherwise get the x,y location of the match and the size of the image to
+    ; compute the centre of search
+    $array = StringSplit($result[0], "|")
+    $CordX = Int(Number($array[2]))
+    $CordY = Int(Number($array[3]))
+	ConsoleWrite("Array Position x: " & $array[2] & "y: " & $array[3] & @CRLF)
+    If $resultPosition = 1 Then
+	ConsoleWrite("Result Position x: " & $array[4] & "y: " & $array[5] & @CRLF)
+        $CordX = $CordX + Int(Number($array[4]) / 2)
+        $CordY = $CordY + Int(Number($array[5]) / 2)
+    EndIf
+    Return 1
+EndFunc
+
 
 #Region Deklarasi
 Global $Paused
@@ -425,10 +472,10 @@ Func CenteringScreen()
 	Sleep(Random(2000,2600))
 	MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3) ;1237, 602
 	Sleep(Random(500, 800))
-	MouseDown( "primary")
+	MouseDown( "left")
 	MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);1154, 265
 	Sleep(100)
-	MouseUp( "primary")
+	MouseUp( "left")
 	CommandCariResource()
 EndFunc
 
@@ -472,12 +519,13 @@ Func CommandCariResource()
 			PesanKonsol("Refreshing Web")
 			Sleep(500)
 			PesanKonsol("Executing To Home")
-			MouseClick( "primary", $xPosReset, $yPosReset, 10)
+			MouseClick( "left", $xPosReset, $yPosReset, 10)
 			Sleep(Random(125000, 200000))
 			CommandSetPosisiKota()
 		Endif
 	Until $CariResource = 1
 	#EndRegion
+	Sleep(200)
 ; 	Jika Resource Ditemukan Lanjutkan Pencarian Job
 	If $CariResource = 1 Then
 ;		Tentukan Pencarian Berdasarkan User Config
@@ -485,7 +533,7 @@ Func CommandCariResource()
 		PesanKonsol("Resource Found!", "Using Image: " & $iResc & "; PosX: " & $xRes & " PosY: " & $yRes)
 ;~ 		Sleep(Int(Number($DelayGetJob)))
 		Sleep(500)
-		MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+		MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
 		$TotalPickResources += 1
 		MouseMove(105, 403, 3)
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
@@ -502,10 +550,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -520,10 +569,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -538,10 +588,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -556,10 +607,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -574,10 +626,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -592,10 +645,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -610,10 +664,11 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "primary", 103, 403, 1, 3) ;Save Klik
+						MouseClick( "left", 103, 403, 1, 3) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 10)
+						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0 ;Loop
 					EndIf
@@ -623,7 +678,7 @@ Func CommandCariResource()
 
 		If $PickJobResource  = 1 Then
 			Sleep(Int($DelayPickJob))
-			MouseClick( "primary", $xJob, $yJob, 1, 10)
+			MouseClick( "left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found Count: " & $CountJob, "Start Pick Job: " & $GetJobResource)
 			Sleep(200)
 			MouseMove( 105, 404, 7) ;Save Posisi
@@ -652,7 +707,7 @@ Func CommandCariGold()
 		Local $FalseWindw = _ImageSearch( $imgTutupWindow, 1, $xFalseWindw, $yFalseWindw, 10)
 		If $FalseWindw = 1 Then
 			Sleep(100)
-			MouseClick( "primary", $xFalseWindw, $yFalseWindw, 1, 10)
+			MouseClick( "left", $xFalseWindw, $yFalseWindw, 1, 10)
 			Sleep(100)
 			MouseMove( 105, 404, 4)
 		EndIf
@@ -667,7 +722,7 @@ Func CommandCariGold()
 				$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
 				If $FindRefreshBtn = 1 Then
 					PesanKonsol("Executing To Home")
-					MouseClick( "primary", $xPosReset, $yPosReset, 10)
+					MouseClick( "left", $xPosReset, $yPosReset, 10)
 					Sleep(Random(125000, 200000))
 					CommandSetPosisiKota()
 				Endif
@@ -679,17 +734,18 @@ Func CommandCariGold()
 		$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
 		If $FindRefreshBtn = 1 Then
 			PesanKonsol("Executing To Home")
-			MouseClick( "primary", $xPosReset, $yPosReset, 10)
+			MouseClick( "left", $xPosReset, $yPosReset, 10)
 			Sleep(Random(125000, 200000))
 			CommandSetPosisiKota()
 		Endif
 	Until $CariGold = 1
 	#EndRegion
+	Sleep(200)
 	If $CariGold = 1 Then
 		Sleep(100)
 		PesanKonsol("Gold Found", "PosX: " & $xGold & " PosY: " & $yGold)
-		Sleep(Int($DelayGetJob))
-		MouseClick( "primary", $xGold + $UPosXGold, $yGold + $UPosYGold, 1, 8)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick( "left", $xGold + $UPosXGold, $yGold + $UPosYGold, 1, 8)
 		$TotalPickGolds += 1
 		MouseMove(105, 404, 5)
 		PesanKonsol("Collecting Gold", "PosX: " & $xGold & " PosY: " & $yGold & " Total Golds Collected: " & $TotalPickGolds)
@@ -728,11 +784,12 @@ Func CommandCariMetal()
 		EndIf
 	Until $CariMetal = 1
 	#EndRegion
+	Sleep(200)
 	If $CariMetal = 1 Then
 		Sleep(100)
 		PesanKonsol("Metal Found", "Using Image: " & $iMetal & "; PosX: " & $xMetal & " PosY: " & $yMetal)
-		Sleep(Int($DelayGetJob))
-		MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
 		$TotalPickMetals += 1
 ;~ 		Sleep(200)
 		MouseMove( 105, 404, 5)
@@ -750,10 +807,10 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
+						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -767,10 +824,10 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
+						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -784,10 +841,10 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
+						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -801,10 +858,10 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
+						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -813,7 +870,7 @@ Func CommandCariMetal()
 		EndSwitch
 		If $PickJobMetal = 1 Then
 			Sleep(Int($DelayPickJob))
-			MouseClick( "primary", $xJob, $yJob, 1, 10)
+			MouseClick( "left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " & $GetJobMetal)
 			Sleep(200)
 			MouseMove( 105, 404, 7)
@@ -841,7 +898,7 @@ Func CommandCariCrystal()
 	#EndRegion
 	#Region Loop Cari Crystal
 	Do
-		$CariCrystal = _ImageSearchArea( $ArrayImgFindCrystal[$iCrystal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xCrystal, $yCrystal, 70)
+		$CariCrystal = _ImageSearchArea( $ArrayImgFindCrystal[$iCrystal], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xCrystal, $yCrystal, 75)
 		$iCrystal += 1
 		$CountSearchCrystal += 1
 		If $iCrystal = 4 Then $iCrystal = 0
@@ -853,12 +910,12 @@ Func CommandCariCrystal()
 		EndIf
 	Until $CariCrystal = 1
 	#EndRegion
-
+	Sleep(200)
 	If $CariCrystal = 1 Then
 		Sleep(100)
 		PesanKonsol("Crystal Found", "Using Image: " & $iCrystal & "; PosX: " & $xCrystal & " PosY: " & $yCrystal)
-		Sleep(Int($DelayGetJob))
-		MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
 		$TotalPickCrystals += 1
 		MouseMove(105, 404, 3)
 		PesanKonsol("Collecting Crsytal", "PosX: " & $xCrystal & " PosY: " & $yCrystal & " Total Collected Crystals: " & $TotalPickCrystals)
@@ -875,10 +932,10 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
+						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -892,10 +949,10 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
+						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -909,10 +966,10 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
+						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -926,10 +983,10 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
+						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -938,7 +995,7 @@ Func CommandCariCrystal()
 		EndSwitch
 		If $PickJobCrystal = 1 Then
 			Sleep(Int($DelayPickRes))
-			MouseClick("primary", $xJob, $yJob, 1, 10)
+			MouseClick("left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " &$GetJobCrystal)
 			Sleep(200)
 			MouseMove(103, 404, 3)
@@ -978,12 +1035,12 @@ Func CommandCariPlank()
 		EndIf
 	Until $CariPlank = 1
 	#EndRegion
-
+	Sleep(200)
 	If $CariPlank = 1 Then
 		Sleep(100)
 		PesanKonsol("Plank Found", "Using Image: " & $iPlank & "; PosX: " & $xPlank & " PosY: " & $yPlank)
-		Sleep(Int($DelayGetJob))
-		MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
 		$TotalPickPlanks += 1
 		MouseMove(105, 403, 3)
 		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
@@ -1000,10 +1057,10 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
+						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1017,10 +1074,10 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
+						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1034,10 +1091,10 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
+						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1051,10 +1108,10 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick("primary", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
+						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1063,7 +1120,7 @@ Func CommandCariPlank()
 		EndSwitch
 		If $PickJobPlank = 1 Then
 			Sleep(Int($DelayPickRes))
-			MouseClick( "primary", $xJob, $yJob, 1, 10)
+			MouseClick( "left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Stack Pick Job: " & $GetJobPlank)
 			Sleep(200)
 			MouseMove(103, 404, 3)
@@ -1103,11 +1160,12 @@ Func CommandCariMarble()
 		EndIf
 	Until $CariMarble = 1
 	#EndRegion
+	Sleep(200)
 	If $CariMarble = 1 Then
 		Sleep(100)
 		PesanKonsol("Marble Found", "Using Image: " & $iMarble & "; PosX: " & $xMarble & " PosY: " & $yMarble)
-		Sleep(Int($DelayGetJob))
-		MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
 		$TotalPickMarbles += 1
 		MouseMove(105, 404, 3)
 		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
@@ -1124,10 +1182,10 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1141,10 +1199,10 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1158,10 +1216,10 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1175,10 +1233,10 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
+						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1187,10 +1245,10 @@ Func CommandCariMarble()
 		EndSwitch
 		If $PickJobMarble = 1 Then
 			Sleep(Int($DelayPickRes))
-			MouseClick( "primary", $xJob, $yJob, 1, 10)
+			MouseClick( "left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " & $GetJobMarble)
 			Sleep(200)
-			MouseMove(105, 404, 7)
+			MouseMove(105, 404, 3)
 			$xMarble = 0
 			$yMarble = 0
 			$xJob = 0
@@ -1221,12 +1279,12 @@ Func CommandCariScroll()
 			CommandCariSilk()
 		EndIf
 	Until $CariScroll = 1
-
+	Sleep(200)
 	If $CariScroll = 1 Then
 		Sleep(100)
 		PesanKonsol("Scroll Found", "Using Image: " & $iScrol & " PoxX: " & $xScrol & " PosY: " & $yScrol)
-		Sleep(Int($DelayGetJob))
-		MouseClick( "primary", $xScrol + $UPosXSilk, $yScrol + $UPosYSilk, 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick( "left", $xScrol + $UPosXSilk, $yScrol + $UPosYSilk, 1, 10)
 		$TotalPickScrolls += 1
 		MouseMove( 105, 404, 5)
 		PesanKonsol("Collecting Scroll", "PosX: " & $xScrol & " PosY: " & $yScrol & " Total Scrolls Collected: " & $TotalPickScrolls)
@@ -1241,9 +1299,9 @@ Func CommandCariScroll()
 					Sleep(Int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
-						MouseClick("primary", 103, 403, 1, 3)
+						MouseClick("left", 103, 403, 1, 3)
 						Sleep(300)
-						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
+						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1256,9 +1314,9 @@ Func CommandCariScroll()
 					Sleep(Int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
-						MouseClick("primary", 103, 403, 1, 3)
+						MouseClick("left", 103, 403, 1, 3)
 						Sleep(300)
-						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
+						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1271,9 +1329,9 @@ Func CommandCariScroll()
 					Sleep(Int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
-						MouseClick("primary", 103, 403, 1, 3)
+						MouseClick("left", 103, 403, 1, 3)
 						Sleep(300)
-						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
+						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1286,9 +1344,9 @@ Func CommandCariScroll()
 					Sleep(Int($DelaySearchImage))
 					$CountJob += 1
 					If $CountJob = 8 Then
-						MouseClick("primary", 103, 403, 1, 3)
+						MouseClick("left", 103, 403, 1, 3)
 						Sleep(300)
-						MouseClick("primary", $xScrol + 4, $yScrol + 70, 1, 10)
+						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1298,10 +1356,10 @@ Func CommandCariScroll()
 		EndSwitch
 		If $pickJobScroll = 1 Then
 			Sleep(Int($DelayPickJob))
-			MouseClick("primary", $xJob, $yJob, 1, 10)
+			MouseClick("left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Executing Job")
 			Sleep(200)
-			MouseMove(105, 404, 7)
+			MouseMove(105, 404, 3)
 			$xScrol = 0
 			$yScrol = 0
 			$xJob = 0
@@ -1331,11 +1389,12 @@ Func CommandCariSilk()
 			CommandCariResource()
 		EndIf
 	Until $CariSilk = 1
+	Sleep(200)
 	If $CariSilk = 1 Then
 		Sleep(100)
 		PesanKonsol("Silk Found", "Using Image: " & $iSilk & " PosX: " & $xSilk & " PosY: " & $ySilk)
-		Sleep(Int($DelayGetJob))
-		MouseClick("primary", $ySilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick("left", ($ySilk + $UPosXSilk), ($ySilk + $UPosYSilk), 1, 10)
 		$TotalPickSilks += 1
 		MouseMove(105, 404, 5)
 		PesanKonsol("Collecting Silk", "PosX: " & $xSilk & " PosY: " & $ySilk & " Total Silk Collected: " & $TotalPickSilks)
@@ -1351,10 +1410,10 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
+						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1368,10 +1427,10 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1,10)
+						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1,10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1385,10 +1444,10 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
+						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1402,10 +1461,10 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "primary", 103, 404, 1, 3)
+						MouseClick( "left", 103, 404, 1, 3)
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
-						MouseClick( "primary", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
+						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 10)
 						Sleep(200)
 						MouseMove(103, 404, 3)
 						$CountJob = 0
@@ -1414,10 +1473,10 @@ Func CommandCariSilk()
 		EndSwitch
 		If $GetJobSilk = 1 Then
 			Sleep(Int($DelayPickJob))
-			MouseClick( "primary", $xJob, $yJob, 1, 10)
+			MouseClick( "left", $xJob, $yJob, 1, 10)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Pick Job: " & $GetJobSilk)
 			Sleep(200)
-			MouseMove(105,404,7)
+			MouseMove(105, 404, 3)
 			$xSilk = 0
 			$ySilk = 0
 			$xJob = 0
@@ -1455,7 +1514,7 @@ Func CommandSetPosisiKota()
 	Until $CariCity = 1
 	If $CariCity = 1 Then
 		Sleep(200)
-		MouseClick("primary", $xCity, $yCity, 1, 10)
+		MouseClick("left", $xCity, $yCity, 1, 10)
 		PesanKonsol("Selecting World")
 		$CariCity = 0
 	EndIf
@@ -1474,7 +1533,7 @@ Func CommandSetPosisiKota()
 	Until $CariHome = 1
 	If $CariHome = 1 Then
 		Sleep(200)
-		MouseClick("primary", $xCity, $yCity, 1, 10)
+		MouseClick("left", $xCity, $yCity, 1, 10)
 		$CariHome = 0
 	EndIf
 	Sleep(800)
@@ -1493,7 +1552,7 @@ Func CommandSetPosisiKota()
 	If $CariHome = 1 Then
 		Sleep(200)
 		CenteringScreen()
-		;MouseClick("primary", $xCity, $yCity, 1, 10)
+		;MouseClick("left", $xCity, $yCity, 1, 10)
 	EndIf
 	Sleep(800)
 EndFunc
@@ -1585,7 +1644,7 @@ Func CommandStartServer()
 	Until $CariServer = 1
 	If $CariServer = 1 Then
 		Sleep(200)
-		MouseClick( "primary", $xServer, $yServer, 1, 10)
+		MouseClick( "left", $xServer, $yServer, 1, 10)
 		Sleep(200)
 		PesanKonsol("Selecting Server")
 		Sleep(1000)
