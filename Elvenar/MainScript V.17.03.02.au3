@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=17.3.9.1
+#AutoIt3Wrapper_Res_Fileversion=17.3.9.2
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -714,7 +714,7 @@ Func CommandCariGold()
 			Sleep(100)
 			MouseClick( "left", $xFalseWindw, $yFalseWindw, 1, 8)
 			Sleep(100)
-			MouseMove( 105, 404, 4)
+			MouseMove(100, 307, 3)
 		EndIf
 		$iGold += 1
 		If $iGold = 3 Then $iGold = 0
@@ -797,7 +797,7 @@ Func CommandCariMetal()
 		MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 		$TotalPickMetals += 1
 ;~ 		Sleep(200)
-		MouseMove( 105, 404, 5)
+		MouseMove( 100, 307, 3)
 		PesanKonsol( "Collecting Metal", "PosX: " & $xMetal & " PosY: " & $yMetal & " Total Collected Metals: " & $TotalPickMetals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMetal = 0
@@ -926,7 +926,7 @@ Func CommandCariCrystal()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 		$TotalPickCrystals += 1
-		MouseMove(105, 404, 3)
+		MouseMove(100, 307, 3)
 		PesanKonsol("Collecting Crsytal", "PosX: " & $xCrystal & " PosY: " & $yCrystal & " Total Collected Crystals: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchCrystal = 0
@@ -1180,7 +1180,7 @@ Func CommandCariMarble()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 		$TotalPickMarbles += 1
-		MouseMove(105, 404, 3)
+		MouseMove(100, 307, 3)
 		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchMarble = 0
@@ -1303,7 +1303,7 @@ Func CommandCariScroll()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick( "left", $xScrol + $UPosXSilk, $yScrol + $UPosYSilk, 1, 10)
 		$TotalPickScrolls += 1
-		MouseMove( 105, 404, 3)
+		MouseMove(100, 307, 3)
 		PesanKonsol("Collecting Scroll", "PosX: " & $xScrol & " PosY: " & $yScrol & " Total Scrolls Collected: " & $TotalPickScrolls)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchScroll = 0
@@ -1419,7 +1419,7 @@ Func CommandCariSilk()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $ySilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 		$TotalPickSilks += 1
-		MouseMove(105, 404, 3)
+		MouseMove(100, 307, 3)
 		PesanKonsol("Collecting Silk", "PosX: " & $xSilk & " PosY: " & $ySilk & " Total Silk Collected: " & $TotalPickSilks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickMetals, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks)
 		$CountSearchSilk = 0
