@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=17.3.7.1
+#AutoIt3Wrapper_Res_Fileversion=17.3.9.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -18,7 +18,7 @@
 #include <File.au3>
 #include <Date.au3>
 
-Opt( "MouseClickDelay", 10)
+;~ Opt( "MouseClickDelay", 10)
 
 Func _ImageSearch($RefImage, $resultPosition, ByRef $CordX, ByRef $CordY, $tolerance, $HBMP=0)
    return _ImageSearchArea($RefImage, $resultPosition, 0, 0, @DesktopWidth, @DesktopHeight, $CordX, $CordY, $tolerance, $HBMP)
@@ -62,7 +62,6 @@ Func _ImageSearchArea($RefImage, $resultPosition, $CordX1, $CordY1, $right, $bot
     EndIf
     Return 1
 EndFunc
-
 
 #Region Deklarasi
 Global $Paused
@@ -173,7 +172,18 @@ DllCall( "Kernel32.dll", "bool", "AllocConsole")
 If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$hFileOpen = FileOpen(@ScriptDir & "\log\Elvenar.log", 0)
 	$hFileRead = FileReadToArray($hFileOpen)
-	;" [R:" & $tres & "; G:" & $tGold & "; Mt:" & $tMetal & "; P:" & $tPlank & "; Ma:" & $tMarb & "; Cr:" & $tCry & "; Sc:" & $tSco & "; Sl:" & $tSlk & "]"
+	If $hFileRead > "" Then
+		FileWriteLine($hFileOpen, "Elvenar AutoClick Log" & _Now())
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+	EndIf
+	FileClose($hFileOpen)
 	$TotalPickResources = Int($hFileRead[1])
 	$TotalPickGolds = Int($hFileRead[2])
 	$TotalPickMetals = Int($hFileRead[3])
@@ -184,7 +194,6 @@ If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$TotalPickSilks = Int($hFileRead[8])
 	$tempTitle = "Elvenar AutoClick Log [R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "]"
 	_WinApi_SetConsoleTitle($tempTitle)
-	FileClose($hFileOpen)
 Else
 _WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:0; Cr:0; Sc:0; Sl:0]")
 EndIf
