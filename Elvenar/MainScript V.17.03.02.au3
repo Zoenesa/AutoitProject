@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=17.3.9.3
+#AutoIt3Wrapper_Res_Fileversion=17.3.9.4
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -199,7 +199,7 @@ _WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:
 EndIf
 WinSetOnTop( "Elvenar AutoClick Log", "", 1)
 WinSetTrans( "Elvenar AutoClick Log", "", 200)
-WinMove( "Elvenar AutoClick Log", "", 5, 0, 797, 105, 3)
+WinMove( "Elvenar AutoClick Log", "", 1, 15, 797, 105, 3)
 DllClose("Kernel32.dll")
 
 ReadSettingan()
