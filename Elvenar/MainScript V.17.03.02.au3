@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=17.3.9.2
+#AutoIt3Wrapper_Res_Fileversion=17.3.9.3
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_Language=1033
@@ -149,7 +149,7 @@ Global $tSetTitle
 #EndRegion
 
 #Region Hotkey
-	HotKeySet("^+p", "TogglePause")
+	HotKeySet("{PGDN}", "TogglePause")
 	HotKeySet("^+q", "CommandExit")
 	HotKeySet("^+{HOME}", "CenteringScreen")
 	HotKeySet("{HOME}", "CommandSetPosisiKota")
