@@ -1,1 +1,13 @@
 Version V.17.2.22.2
+
+Update V.17.3.9.4
+Add To Do:
+- di setiap fungsi pencarian set posisi re-center search area pada kelompok buildings;
+- pencarian image revert ke non full screen karena area pencarian semakin besar;
+- posisi console revert ke semula;
+- ganti fungsi cari gold setelah max. resource stack dalam timing tiap 30 menit
+  agar pendapatan gold maksimal dan pencarian lebih efisien
+  urutan pencarian image jadi resource, metal , cristal, elixir, plank, marble, scroll, silk, dust dan gems,
+  loop ke pencarian gold ketika timing mencapai 30 menit;
+- dalam urutan pencarian apabila loop timing 5 menit memungkinkan kembali ke pencarian resource;
+- rubah file config.ini dari global jadi per file tiap kategori pencarian;
