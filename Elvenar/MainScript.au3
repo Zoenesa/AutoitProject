@@ -211,7 +211,39 @@ Sleep(30000)
 FindSponsorWnd()
 
 Func ReadSettingan()
+
+	#Region Check File Configs
 	Global $hFileSetting = @ScriptDir & "\config\Config.ini"
+	Global $hfileResourcesIni = @ScriptDir & "\config\001Resources.ini"
+	Global $hfileMetalsIni = @ScriptDir & "\config\002Metal.ini"
+	Global $hfileCrystalsIni = @ScriptDir & "\config\003Crystals.ini"
+	Global $hfileElixirsIni = @ScriptDir & "\config\004Elixir.ini"
+	Global $hfilePlanksIni = @ScriptDir & "\config\005Planks.ini"
+	Global $hfileMarblesIni = @ScriptDir & "\config\006Marbles.ini"
+	Global $hfileScrollsIni= @ScriptDir & "\config\007Scrolls.ini"
+	Global $hfileSilksIni= @ScriptDir & "\config\008Silks.ini"
+	Global $hfileDustsIni= @ScriptDir & "\config\009Dusts.ini"
+	Global $hfileGemsIni= @ScriptDir & "\config\010Gems.ini"
+	Global $hfileGoldsIni= @ScriptDir & "\config\011Golds.ini"
+
+	Local $hFilesConfigsIni[12] = [$hFileSetting, $hfileResourcesIni, _
+	$hfileGoldsIni, $hfileMetalsIni, $hfileCrystalsIni, _
+	$hfileElixirsIni,$hfilePlanksIni, $hfileMarblesIni, _
+	$hfileScrollsIni, $hfileSilksIni, $hfileDustsIni, $hfileGemsIni]
+;~ 	local $i = 0
+	$iFile = 1
+	Do
+		PesanKonsol("Checking File Configs", $iFile)
+		If Not FileExists($hFilesConfigsIni[$iFile - 1]) Then
+			_FileCreate($hFilesConfigsIni[$iFile - 1])
+
+		EndIf
+		Sleep(500)
+		$iFile += 1
+	Until $iFile = 13
+
+	#EndRegion
+
 	#Region Read Setup Job
 	Sleep(500)
 	PesanKonsol("Read Settingan", "Section [SetupJob]")
@@ -473,17 +505,6 @@ If $StartPointerPosition = 1 Then
 	CommandSetPosisiKota()
 ;~ 	CenteringScreen()
 EndIf
-
-Func CenteringScreen()
-	Sleep(Random(2000,2600))
-	MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3) ;1237, 602
-	Sleep(Random(500, 800))
-	MouseDown( "left")
-	MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);1154, 265
-	Sleep(100)
-	MouseUp( "left")
-	CommandCariResource()
-EndFunc
 
 Func CommandCariResource()
 ;~ 	ReadSettingan()
@@ -1522,6 +1543,17 @@ EndFunc
 
 Func PesanKonsol( $refMsg, $refComment = " ")
 	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF)
+EndFunc
+
+Func CenteringScreen()
+	Sleep(Random(2000,2600))
+	MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3) ;1237, 602
+	Sleep(Random(500, 800))
+	MouseDown( "left")
+	MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);1154, 265
+	Sleep(100)
+	MouseUp( "left")
+	CommandCariResource()
 EndFunc
 
 Func CommandSetPosisiKota()
