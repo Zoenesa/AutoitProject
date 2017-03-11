@@ -1,8 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
 #AutoIt3Wrapper_Outfile=MainScript V.17.3.9.1.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.17.3.9.1_X64.exe
-#AutoIt3Wrapper_Compile_Both=y
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.4_X64.exe
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
