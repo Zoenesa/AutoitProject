@@ -1,7 +1,8 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.17.3.9.1.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.3.4.exe
 #AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.4_X64.exe
+#AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
@@ -64,6 +65,8 @@ EndFunc
 
 #Region Deklarasi
 Global $Paused
+
+Local $iSection
 
 Local Static $LimitFindResource
 Local Static $LimitFindGold
@@ -213,33 +216,178 @@ Func ReadSettingan()
 
 	#Region Check File Configs
 	Global $hFileSetting = @ScriptDir & "\config\Config.ini"
-	Global $hfileResourcesIni = @ScriptDir & "\config\001Resources.ini"
-	Global $hfileMetalsIni = @ScriptDir & "\config\002Metal.ini"
-	Global $hfileCrystalsIni = @ScriptDir & "\config\003Crystals.ini"
-	Global $hfileElixirsIni = @ScriptDir & "\config\004Elixir.ini"
-	Global $hfilePlanksIni = @ScriptDir & "\config\005Planks.ini"
-	Global $hfileMarblesIni = @ScriptDir & "\config\006Marbles.ini"
-	Global $hfileScrollsIni= @ScriptDir & "\config\007Scrolls.ini"
-	Global $hfileSilksIni= @ScriptDir & "\config\008Silks.ini"
-	Global $hfileDustsIni= @ScriptDir & "\config\009Dusts.ini"
-	Global $hfileGemsIni= @ScriptDir & "\config\010Gems.ini"
-	Global $hfileGoldsIni= @ScriptDir & "\config\011Golds.ini"
+	Global $hfileResourcesIni = @ScriptDir & "\config\Resources.ini"
 
-	Local $hFilesConfigsIni[12] = [$hFileSetting, $hfileResourcesIni, _
-	$hfileGoldsIni, $hfileMetalsIni, $hfileCrystalsIni, _
-	$hfileElixirsIni,$hfilePlanksIni, $hfileMarblesIni, _
-	$hfileScrollsIni, $hfileSilksIni, $hfileDustsIni, $hfileGemsIni]
+	Local $hFilesConfigsIni[2] = [$hFileSetting, $hfileResourcesIni]
 ;~ 	local $i = 0
 	$iFile = 1
+	$iFileErr = ""
+	local $iWrite
 	Do
-		PesanKonsol("Checking File Configs", $iFile)
-		If Not FileExists($hFilesConfigsIni[$iFile - 1]) Then
+		If FileExists($hFilesConfigsIni[$iFile - 1]) Then
+			PesanKonsol("File Ok", $hFilesConfigsIni[$iFile - 1])
+			$iSection = IniReadSectionNames( $hFilesConfigsIni[$ifile-1])
+			PesanKonsol("Checking File Configs", $hFilesConfigsIni[$iFile-1])
+			Sleep(500)
+			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"))
+			Sleep(500)
+		Else
+			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"))
+			$iFileErr = $iFileErr & $hFilesConfigsIni[$iFile -1]
+			PesanKonsol("File Not Found, Create File", $iFileErr)
+			Sleep(1000)
 			_FileCreate($hFilesConfigsIni[$iFile - 1])
+			Sleep(1000)
 
+			$iWrite += 1
+			Switch $iFileErr
+				Case $hFilesConfigsIni[0]
+					PesanKonsol("Write Ini", $hFilesConfigsIni[0])
+					Sleep(1000)
+					IniWrite($hFileSetting, "Test1", "Test", "1")
+;~ 					IniWrite($hFileSetting, "", "", "")
+				Case $hFilesConfigsIni[1]
+					PesanKonsol("File Create ..\config\Resources.ini","")
+					Sleep(1000)
+					PesanKonsol("Write .ini", "Section: ResourcesConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "ResourcesConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: MetalsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "MetalsConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: CrystalsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "CrystalsConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: ElixirsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "ElixirsConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: PlanksConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "PlanksConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: MarblesConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "MarblesConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: ScrollsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "ScrollsConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: SilksConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "SilksConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "SilksConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: MagicDustConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "MagicDustConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: GemsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "GemsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "GemsConfig", "MaxStack", 1)
+
+					PesanKonsol("Write Ini", "Section: GoldsConfig")
+					Sleep(200)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "TopX", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "TopY", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "wRight", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "hBottom", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "DelaySearchImage", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "DelayPickJob", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "LimitSearch", 1)
+					IniWrite($hfileResourcesIni, "GoldsConfig", "MaxStack", 1)
+
+					$iSection = IniReadSectionNames( $hfileResourcesIni)
+					PesanKonsol("Checking File Configs", $hFilesConfigsIni[$iFile-1])
+
+					PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"))
+
+					Sleep(1000)
+					PesanKonsol("Consolse Will Restart")
+					Sleep(1000)
+					ShellExecute(@ScriptFullPath)
+					Exit 0
+			EndSwitch
 		EndIf
 		Sleep(500)
 		$iFile += 1
-	Until $iFile = 13
+		$iFileErr = ""
+	Until $iFile = 3
+
+
 
 	#EndRegion
 
