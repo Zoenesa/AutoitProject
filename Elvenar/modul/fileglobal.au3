@@ -8,6 +8,7 @@ Global $imgPathPlank = @ScriptDir & "\img\05plank\"
 Global $imgPathMarble = @ScriptDir & "\img\06marble\"
 Global $imgPathCrystal = @ScriptDir & "\img\07crystal\"
 Global $imgPathGold = @ScriptDir & "\img\08Gold\"
+Global $imgPathElixir = @ScriptDir & "\img\09Elixir\"
 
 Global $imgSrcBarrack = $imgPathMain & "Barracks.bmp"
 
@@ -94,6 +95,18 @@ Global $imgsrc47 = $imgPathCrystal & "Silkvar.bmp"
 
 Global $ArrayImgScroll[4] = [$imgsrc40, $imgsrc41, $imgsrc42, $imgsrc43]
 Global $ArrayImgSilks[4] = [$imgsrc44, $imgsrc45, $imgsrc46, $imgsrc47]
+
+Global $imgsrc48 = $imgPathElixir & "Elixirh.bmp"
+Global $imgsrc49 = $imgPathElixir & "Elixirl.bmp"
+Global $imgsrc50 = $imgPathElixir & "Elixirw.bmp"
+Global $imgsrc51 = $imgPathElixir & "Elixirvar.bmp"
+
+Global $ArrayImgElixir[4] = [$imgsrc48, $imgsrc49, $imgsrc50, $imgsrc51]
+
+;~ Global $imgsrc54 = $imgPathElixir & "Dustl.bmp"
+;~ Global $imgsrc55 = $imgPathElixir & "Dusth.bmp"
+;~ Global $imgsrc56 = $imgPathElixir & "Dustw.bmp"
+;~ Global $imgsrc57 = $imgPathElixir & "Dustvar.bmp"
 
 Global $imgCity1 = @ScriptDir & "\img\03Main\World.bmp"
 Global $imgCity2 = @ScriptDir & "\img\03Main\World2.bmp"
