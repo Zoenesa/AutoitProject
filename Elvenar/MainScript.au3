@@ -785,6 +785,7 @@ Func CommandCariResource()
 
 
 	#Region Deklarasi Sub
+
 	$iResc = 0
 	$CountSearchResc = 0
 	$CariResource = 0
@@ -813,6 +814,7 @@ Func CommandCariResource()
 				ExitLoop
 				CommandCariGold()
 			EndIf
+			$ResourceStack = 0
 			PesanKonsol("Maksimum Stack Reach", "Switch Searching Resource to Gold")
 			CommandCariGold() ;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 		EndIf
@@ -839,6 +841,7 @@ Func CommandCariResource()
 		Sleep(500)
 		MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 		$TotalPickResources += 1
+		$ResourceStack += 1
 		MouseMove(100, 395, 3)
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
