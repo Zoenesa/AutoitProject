@@ -1996,6 +1996,10 @@ Func CommandCariSilk()
 	CommandCariSilk()
 EndFunc
 
+Func CommandCariGems()
+
+EndFunc
+
 Func CommandRestart()
 	Sleep(Random(1000, 3000))
 	ShellExecute(@ScriptFullPath)
