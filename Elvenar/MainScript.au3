@@ -18,6 +18,7 @@
 #include "modul\fileglobal.au3"
 #include <File.au3>
 #include <Date.au3>
+#include "modul\Console.au3"
 
 ;~ Opt( "MouseClickDelay", 10)
 
@@ -243,16 +244,16 @@ Func ReadSettingan()
 	local $iWrite
 	Do
 		If FileExists($hFilesConfigsIni[$iFile]) Then
-			PesanKonsol("File Ok", $hFilesConfigsIni[$iFile])
+			PesanKonsol("File Ok", $hFilesConfigsIni[$iFile], 2)
 			$iSection = IniReadSectionNames( $hFilesConfigsIni[$ifile])
-			PesanKonsol("Checking File Configs", $hFilesConfigsIni[$iFile])
+			PesanKonsol("Checking File Configs", $hFilesConfigsIni[$iFile], 2)
 			Sleep(500)
-			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"))
+			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"), 2)
 			Sleep(500)
 		Else
-			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"))
+			PesanKonsol("Checking Section Names", _ArrayToString( $iSection, "|"), 2)
 			$iFileErr = $iFileErr & $hFilesConfigsIni[$iFile -1]
-			PesanKonsol("File Not Found, Create File", $iFileErr)
+			PesanKonsol("File Not Found, Create File", $iFileErr, 2)
 			Sleep(1000)
 			_FileCreate($hFilesConfigsIni[$iFile - 1])
 			Sleep(1000)
@@ -260,14 +261,14 @@ Func ReadSettingan()
 			$iWrite += 1
 			Switch $iFileErr
 				Case $hFilesConfigsIni[0]
-					PesanKonsol("Write Ini", $hFilesConfigsIni[0])
+					PesanKonsol("Write Ini", $hFilesConfigsIni[0], 2)
 					Sleep(1000)
 					IniWrite($hFileSetting, "Test1", "Test", "1")
 ;~ 					IniWrite($hFileSetting, "", "", "")
 				Case $hFilesConfigsIni[1]
-					PesanKonsol("File Create ..\config\Resources.ini","")
+					PesanKonsol("File Create ..\config\Resources.ini","", 2)
 					Sleep(1000)
-					PesanKonsol("Write .ini", "Section: ResourcesConfig")
+					PesanKonsol("Write .ini", "Section: ResourcesConfig", 2)
 					Sleep(200)
 					IniWrite($hfileResourcesIni, "ResourcesConfig", "TopX", 1)
 					IniWrite($hfileResourcesIni, "ResourcesConfig", "TopY", 1)
@@ -288,7 +289,7 @@ Func ReadSettingan()
 					IniWrite($hfileResourcesIni, "ResourcesConfig", "EndPosX", 90)
 					IniWrite($hfileResourcesIni, "ResourcesConfig", "EndPosY", 90)
 
-					PesanKonsol("Write Ini", "Section: MetalsConfig")
+					PesanKonsol("Write Ini", "Section: MetalsConfig", 2)
 					Sleep(200)
 					IniWrite($hfileResourcesIni, "MetalsConfig", "TopX", 1)
 					IniWrite($hfileResourcesIni, "MetalsConfig", "TopY", 1)
@@ -305,7 +306,7 @@ Func ReadSettingan()
 					IniWrite($hfileResourcesIni, "MetalsConfig", "EndPosX", 90)
 					IniWrite($hfileResourcesIni, "MetalsConfig", "EndPosY", 90)
 
-					PesanKonsol("Write Ini", "Section: CrystalsConfig")
+					PesanKonsol("Write Ini", "Section: CrystalsConfig", 2)
 					Sleep(200)
 					IniWrite($hfileResourcesIni, "CrystalsConfig", "TopX", 1)
 					IniWrite($hfileResourcesIni, "CrystalsConfig", "TopY", 1)
@@ -322,7 +323,7 @@ Func ReadSettingan()
 					IniWrite($hfileResourcesIni, "CrystalsConfig", "EndPosX", 90)
 					IniWrite($hfileResourcesIni, "CrystalsConfig", "EndPosY", 90)
 
-					PesanKonsol("Write Ini", "Section: ElixirsConfig")
+					PesanKonsol("Write Ini", "Section: ElixirsConfig", 2)
 					Sleep(200)
 					IniWrite($hfileResourcesIni, "ElixirsConfig", "TopX", 1)
 					IniWrite($hfileResourcesIni, "ElixirsConfig", "TopY", 1)
@@ -339,7 +340,7 @@ Func ReadSettingan()
 					IniWrite($hfileResourcesIni, "ElixirsConfig", "EndPosX", 90)
 					IniWrite($hfileResourcesIni, "ElixirsConfig", "EndPosY", 90)
 
-					PesanKonsol("Write Ini", "Section: PlanksConfig")
+					PesanKonsol("Write Ini", "Section: PlanksConfig", 2)
 					Sleep(200)
 					IniWrite($hfileResourcesIni, "PlanksConfig", "TopX", 1)
 					IniWrite($hfileResourcesIni, "PlanksConfig", "TopY", 1)
@@ -783,7 +784,6 @@ Func CommandCariResource()
 		$firstRescmove = 0
 	EndIf
 
-
 	#Region Deklarasi Sub
 
 	$iResc = 0
@@ -807,7 +807,7 @@ Func CommandCariResource()
 		If $iResc = 4 Then $iResc = 0
 		$CountSearchResc += 1
 		Sleep(Int(Number($DelaySearchImage)))
-		PesanKonsol("Searching Resource, Limit: " & $LimitFindResource & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc)
+		PesanKonsol("Searching Resource, Limit: " & $LimitFindResource & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc, 3)
 		If $CountSearchResc = Int($LimitFindResource) Then
 			If $OnlySearchResource = 1 Then
 				$CountSearchResc = 0
@@ -815,15 +815,15 @@ Func CommandCariResource()
 				CommandCariGold()
 			EndIf
 			$ResourceStack = 0
-			PesanKonsol("Maksimum Stack Reach", "Switch Searching Resource to Gold")
+			PesanKonsol("Maksimum Stack Reach", "Switch Searching Resource to Gold", 2)
 			CommandCariGold() ;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 		EndIf
 
 		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
 		If $ResetRefresh = 1 Then
-			PesanKonsol("Searching End or Error Session")
+			PesanKonsol("Searching End or Error Session", 1)
 			Sleep(500)
-			PesanKonsol("Executing To Home")
+			PesanKonsol("Executing To Home", 2)
 			MouseClick( "left", $xPosReset, $yPosReset, 10)
 			Sleep(Random(120000, 200000))
 			CommandSetPosisiKota()
@@ -836,19 +836,19 @@ Func CommandCariResource()
 	If $CariResource = 1 Then ; 	Jika Resource Ditemukan Lanjutkan Pencarian Job
 ;		Tentukan Pencarian Berdasarkan User Config
 		Sleep(100)
-		PesanKonsol("Resource Found!", "Using Image: " & $iResc & "; PosX: " & $xRes & " PosY: " & $yRes)
+		PesanKonsol("Resource Found!", "Using Image: " & $iResc & "; PosX: " & $xRes & " PosY: " & $yRes, 2)
 ;~ 		Sleep(Int(Number($DelayGetJob)))
 		Sleep(500)
 		MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 		$TotalPickResources += 1
 		$ResourceStack += 1
 		MouseMove(100, 395, 3)
-		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
+		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources, 2)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$PickJobResource = 0
 		Switch $GetJobResource
 			Case 1 ; 5min
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
 					Sleep(Int(Number($DelayPickJob)))
@@ -858,17 +858,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case 2 ; 15min
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Simple Tools)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Simple Tools)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc6, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -877,17 +877,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case 3 ; 1hr
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Bread)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Bread)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc7, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -896,17 +896,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case 4 ; 3hr
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Advanced Tools)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Advanced Tools)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc8, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -915,17 +915,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case 5 ; 9hr
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Basket Of Groceries)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Basket Of Groceries)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc9, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -934,17 +934,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case 6 ; 1day
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Toolbox)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Toolbox)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc10, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -953,17 +953,17 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 			Case Else ; Jika di Settingan tidak ada Nilai
-				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)")
+				PesanKonsol("Searching Job For Resource", "Using Job: " & $GetJobResource & "(Beverage)", 2)
 				Do
 					$PickJobResource  = _ImageSearch( $imgsrc5, 1, $xJob, $yJob, 60)
 					Sleep(int($DelaySearchImage))
@@ -972,21 +972,21 @@ Func CommandCariResource()
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
 						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob, 2)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
 						MouseMove(100, 395, 3)
 						$CountJob = 0 ;Loop
 					EndIf
-					PesanKonsol("Searching Job", "Count: " & $CountJob)
+					PesanKonsol("Searching Job", "Count: " & $CountJob, 2)
 				Until $PickJobResource  = 1
 		EndSwitch
 
 		If $PickJobResource  = 1 Then
 			Sleep(Int($DelayPickJob))
 			MouseClick( "left", $xJob, $yJob, 1, 8)
-			PesanKonsol("Job Found Count: " & $CountJob, "Start Pick Job: " & $GetJobResource)
+			PesanKonsol("Job Found Count: " & $CountJob, "Start Pick Job: " & $GetJobResource, 2)
 			Sleep(200)
 			MouseMove(100, 395, 3)
 			$xRes = 0
@@ -2006,8 +2006,16 @@ Func CommandRestart()
 	CommandExit()
 EndFunc
 
-Func PesanKonsol( $refMsg, $refComment = " ")
-	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF)
+Func PesanKonsol( $refMsg, $refComment = " ", $Clr = 1)
+;~ 	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF)
+	Switch $Clr
+		Case 1
+			Cout("[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF, $FOREGROUND_RED)
+		Case 2
+			Cout("[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF, $FOREGROUND_GREEN)
+		Case 3
+			Cout("[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF, $FOREGROUND_BLUE)
+	EndSwitch
 EndFunc
 
 Func CenteringScreen()
