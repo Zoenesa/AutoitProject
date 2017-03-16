@@ -1011,7 +1011,7 @@ Func CommandCariGold()
 		MouseMove( Int(Number(346)), Int(Number(294)), 3)
 		Sleep(Random(500, 800))
 		MouseDown( "left")
-		MouseMove( Int(Number(1133)), Int(Number(267)), 20);1120,252
+		MouseMove( Int(Number(1133)), Int(Number(240)), 20);1120,252
 		Sleep(100)
 		MouseUp( "left")
 		Sleep(100)
@@ -1058,7 +1058,7 @@ Func CommandCariGold()
 			;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 			PesanKonsol("Switch Searching Resource to Metal")
 			Sleep(Random(300,500))
-			MouseMove( Int(Number(1133)), Int(Number(267)), 3)
+			MouseMove( Int(Number(1133)), Int(Number(240)), 3)
 			Sleep(Random(500, 800))
 			MouseDown( "left")
 			MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20)
