@@ -185,6 +185,7 @@ Global $tSetTitle
 	HotKeySet("^{NUMPAD8}","CommandCariSilk")
 	HotKeySet("^+g","ReadSettingan")
 	HotKeySet("^{NUMPAD9}","CommandCariGems")
+	HotKeySet("^{NUMPADADD}","CommandCariDust")
 	HotKeySet("{F7}","FindSponsorWnd")
 #EndRegion
 
@@ -518,7 +519,7 @@ Func ReadSettingan()
 	Sleep(10)
 	PesanKonsol("Read Settingan $ResidenceStack", "Key: Residence; Value: " & $ResidenceStack)
 	;------------------2
-	$ResourceStack = IniRead($hFileSetting, "TotalBuilding", "WorkShop", 6)
+	$ResourceStack = 0 ;IniRead($hFileSetting, "TotalBuilding", "WorkShop", 6)
 	Sleep(10)
 	PesanKonsol("Read Settingan $ResourceStack", "Key: WorkShop; Value: " & $ResourceStack)
 	;------------------3
@@ -801,6 +802,7 @@ Func CommandCariResource()
 	$xJob = 0
 	$yJob = 0
 	$CountJob = 0
+	$IniStack = IniRead( $hFileSetting, "SettingAplikasi", "ResourceStack", 30)
 	;Total Limit Searching Resource dari File Config
 	$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
 	$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
@@ -816,16 +818,14 @@ Func CommandCariResource()
 		If $iResc = 4 Then $iResc = 0
 		$CountSearchResc += 1
 		Sleep(Int(Number($DelaySearchImage)))
-		PesanKonsol("Searching Resource, Limit: " & $LimitFindResource & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc)
+		PesanKonsol("Searching Resource Current Stack: " & $ResourceStack & ", Limit: " & $LimitFindResource & " Stack: " & $IniStack & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc)
 		If $CountSearchResc = Int($LimitFindResource) Then
-			If $OnlySearchResource = 1 Then
-				$CountSearchResc = 0
-				ExitLoop
-				CommandCariGold()
+			$CountSearchResc = 0
+			If $ResourceStack = $IniStack Then
+				PesanKonsol("Maksimum Stack Reach", "Switch Searching Resource to Gold")
+				$ResourceStack = 0
+				CommandCariGold() ;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 			EndIf
-			$ResourceStack = 0
-			PesanKonsol("Maksimum Stack Reach", "Switch Searching Resource to Gold")
-			CommandCariGold() ;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
 		EndIf
 
 		$ResetRefresh = _ImageSearch( @ScriptDir & "\img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
@@ -834,10 +834,11 @@ Func CommandCariResource()
 			Sleep(500)
 			PesanKonsol("Executing To Home")
 			MouseClick( "left", $xPosReset, $yPosReset, 10)
+			$ResourceStack = 0
 			Sleep(Random(120000, 200000))
 			CommandSetPosisiKota()
 		Endif
-	Until $CariResource = 1
+	Until $CariResource = 1 ;Or $ResourceStack = $IniStack
 
 	#EndRegion
 	Sleep(200)
@@ -1004,7 +1005,6 @@ Func CommandCariResource()
 			$yJob = 0
 		EndIf
 	Endif
-
 	CommandCariResource()
 EndFunc
 
@@ -1873,7 +1873,7 @@ Func CommandCariScroll()
 EndFunc
 
 Func CommandCariSilk()
-;~ 	ReadSettingan()
+
 	$iSilk = 0
 	$xSilk = 0
 	$ySilk = 0
@@ -1888,7 +1888,7 @@ Func CommandCariSilk()
 		Sleep(Int($DelaySearchImage))
 		PesanKonsol("Searching Silk, Limit: " & $LimitFindSilk & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
 		If $CountSearchSilk = Int($LimitFindSilk) Then
-			PesanKonsol("Maksimum Stack Reach", "Switch Searching Silk To Gems")
+			PesanKonsol("Maksimum Stack Reach", "Switch Searching Silk To Dust")
 			CommandCariDust()
 		EndIf
 	Until $CariSilk = 1
@@ -1995,40 +1995,165 @@ Func CommandCariSilk()
 	CommandCariSilk()
 EndFunc
 
+Func CommandCariDust()
+	#Region Deklarasi
+		$iDust = 0
+		$xDust = 0
+		$yDust = 0
+		$CountSearchDust = 0
+		Local $DustFound = 0
+		$CountJob = 0
+		$xJob = 0
+		$yJob = 0
+		$LimitFindDust = IniRead($hFileSetting, "SettingAplikasi", "LimitFindDust", 100)
+	#EndRegion
+	#Region Loop Cari Crystal
+	Do
+		$CariDust = _ImageSearchArea( $ArrayImgDust[$iDust], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xDust, $yDust, 80)
+		$iDust += 1
+		$CountSearchDust += 1
+		If $iDust = 4 Then $iDust = 0
+		Sleep(Int($DelaySearchImage))
+		PesanKonsol( "Searching Magic Dust, Limit: " & $LimitFindDust & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchDust & " Using Image: " & $iDust)
+		If $CountSearchDust = Int($LimitFindDust) Then
+			PesanKonsol("Maksimum Stack Reach", "Switch Searching Magic Dust To Gems")
+			CommandCariGems()
+		EndIf
+	Until $CariDust = 1
+	#EndRegion
+	Sleep(200)
+	If $CariDust = 1 Then
+		Sleep(100)
+		PesanKonsol("Magic Dust Found", "Using Image: " & $iDust & "; PosX: " & $xDust & " PosY: " & $yDust)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+		$TotalPickCrystals += 1
+		MouseMove(100, 395, 3)
+		PesanKonsol("Collecting Magic Dust", "PosX: " & $xDust & " PosY: " & $yDust & " Total Collected Dust: " & $TotalPickCrystals)
+		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
+		$CountSearchDust = 0
+		$GetJobDust = IniRead( $hFileSetting, "SetupJob", "Dust", 1)
+		$PickJobDust = 0
+		Switch $GetJobDust
+			Case 1
+				PesanKonsol("Searching Job Magic Dust", "Using Job: " & $GetJobDust & "(Small Flacon)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case 2
+				PesanKonsol("Searching Job Magic Dust", "Using Job: " & $GetJobDust & "(Alchemy Kit)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc38, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case 3
+				PesanKonsol("Searching Job Dust", "Using Job: " & $GetJobDust & "(Crystal Ball)") ; 4 ornamental window
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case Else
+				PesanKonsol("Searching Job Dust", "Using Job: " & $GetJobDust & "(Small Flacon)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+		EndSwitch
+		If $PickJobDust = 1 Then
+			Sleep(Int($DelayPickJob))
+			MouseClick("left", $xJob, $yJob, 1, 8)
+			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobDust)
+			Sleep(200)
+			MouseMove(100, 395, 3)
+			$xDust = 0
+			$yDust = 0
+			$xJob = 0
+			$yJob = 0
+		EndIf
+	Endif
+
+	CommandCariDust()
+EndFunc
+
 Func CommandCariGems()
-#Region Deklarasi
-	$iGems = 0
-	$xGem = 0
-	$yGem = 0
-	$CountSearchGem = 0
-	Local $GemFound = 0
-	$CountJob = 0
-	$xJob = 0
-	$yJob = 0
-	$LimitFindGems = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGems", 100)
+	#Region Deklarasi
+		$iGems = 0
+		$xGem = 0
+		$yGem = 0
+		$CountSearchGem = 0
+		Local $GemFound = 0
+		$CountJob = 0
+		$xJob = 0
+		$yJob = 0
+		$LimitFindGems = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGems", 100)
 	#EndRegion
 	#Region Loop Cari Gems
-	Do
-		$CariGems = _ImageSearchArea( $ArrayImgGems[$iGems], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGem, $yGem, 80)
-		$iGems += 1
-		$CountSearchGem += 1
-		If $iGems = 4 Then $iGems = 0
-		Sleep(Int($DelaySearchImage))
-		PesanKonsol( "Searching Gems, Limit: " & $LimitFindGems & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchGem & " Using Image: " & $iGems)
-		If $CountSearchGem = Int($LimitFindGems) Then
-			PesanKonsol("Maksimum Stack Reach", "Switch Searching Gems To Resource")
-			Sleep(Random(300,500))
-			MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 3)
-			Sleep(Random(500, 800))
-			MouseDown( "left")
-			MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 20)
-			Sleep(100)
-			MouseUp( "left")
+		Do
+			$CariGems = _ImageSearchArea( $ArrayImgGems[$iGems], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGem, $yGem, 80)
+			$iGems += 1
+			$CountSearchGem += 1
+			If $iGems = 4 Then $iGems = 0
+			Sleep(Int($DelaySearchImage))
+			PesanKonsol( "Searching Gems, Limit: " & $LimitFindGems & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchGem & " Using Image: " & $iGems)
+			If $CountSearchGem = Int($LimitFindGems) Then
+				PesanKonsol("Maksimum Stack Reach", "Switch Searching Dust To Resource")
+				Sleep(Random(300,500))
+				MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 3)
+				Sleep(Random(500, 800))
+				MouseDown( "left")
+				MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 20)
+				Sleep(100)
+				MouseUp( "left")
 
-			$firstRescmove = 1
-			$firstGoldMove = 1
-			CommandCariResource()
-		EndIf
+				$firstRescmove = 1
+				$firstGoldMove = 1
+				CommandCariResource()
+			EndIf
 	Until $CariGems = 1
 	#EndRegion
 	Sleep(200)
@@ -2128,131 +2253,6 @@ Func CommandCariGems()
 	Endif
 
 	CommandCariGems()
-EndFunc
-
-Func CommandCariDust()
-	#Region Deklarasi
-	$iDust = 0
-	$xDust = 0
-	$yDust = 0
-	$CountSearchDust = 0
-	Local $DustFound = 0
-	$CountJob = 0
-	$xJob = 0
-	$yJob = 0
-	$LimitFindDust = IniRead($hFileSetting, "SettingAplikasi", "LimitFindDust", 100)
-	#EndRegion
-	#Region Loop Cari Crystal
-	Do
-		$CariDust = _ImageSearchArea( $ArrayImgFindCrystal[$iDust], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xDust, $yDust, 80)
-		$iDust += 1
-		$CountSearchDust += 1
-		If $iDust = 4 Then $iDust = 0
-		Sleep(Int($DelaySearchImage))
-		PesanKonsol( "Searching Crsytal, Limit: " & $LimitFindDust & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchDust & " Using Image: " & $iDust)
-		If $CountSearchDust = Int($LimitFindDust) Then
-			PesanKonsol("Maksimum Stack Reach", "Switch Searching Magic Dust To Gems")
-			CommandCariGems()
-		EndIf
-	Until $CariDust = 1
-	#EndRegion
-	Sleep(200)
-	If $CariDust = 1 Then
-		Sleep(100)
-		PesanKonsol("Magic Dust Found", "Using Image: " & $iDust & "; PosX: " & $xDust & " PosY: " & $yDust)
-		Sleep(Int(Number($DelayGetJob)))
-		MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-		$TotalPickCrystals += 1
-		MouseMove(100, 395, 3)
-		PesanKonsol("Collecting Crsytal", "PosX: " & $xDust & " PosY: " & $yDust & " Total Collected Crystals: " & $TotalPickCrystals)
-		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
-		$CountSearchDust = 0
-		$GetJobDust = IniRead( $hFileSetting, "SetupJob", "Crystal", 1)
-		$PickJobDust = 0
-		Switch $GetJobDust
-			Case 1
-				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Small Flacon)")
-				Do
-					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchImage))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-						Sleep(200)
-						MouseMove(100, 395, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobDust = 1
-			Case 2
-				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Alchemy Kit)")
-				Do
-					$PickJobDust = _ImageSearch( $imgsrc38, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchImage))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-						Sleep(200)
-						MouseMove(100, 395, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobDust = 1
-			Case 3
-				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Crystal Ball)") ; 4 ornamental window
-				Do
-					$PickJobDust = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchImage))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-						Sleep(200)
-						MouseMove(100, 395, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobDust = 1
-			Case Else
-				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Small Flacon)")
-				Do
-					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
-					Sleep(Int($DelaySearchImage))
-					$CountJob += 1
-					If $CountJob = 8 Then
-						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
-						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
-						Sleep(200)
-						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-						Sleep(200)
-						MouseMove(100, 395, 3)
-						$CountJob = 0
-					EndIf
-				Until $PickJobDust = 1
-		EndSwitch
-		If $PickJobDust = 1 Then
-			Sleep(Int($DelayPickJob))
-			MouseClick("left", $xJob, $yJob, 1, 8)
-			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobDust)
-			Sleep(200)
-			MouseMove(100, 395, 3)
-			$xDust = 0
-			$yDust = 0
-			$xJob = 0
-			$yJob = 0
-		EndIf
-	Endif
-
-	CommandCariDust()
 EndFunc
 
 Func CommandRestart()
