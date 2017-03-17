@@ -1,13 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.3.5.1.Exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.5.1_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.3.6.1.Exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.6.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=1.3.5.1
+#AutoIt3Wrapper_Res_Fileversion=1.3.6.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -620,6 +620,10 @@ Func ReadSettingan()
 	$LimitFindGems = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGems", 100)
 	Sleep(10)
 	PesanKonsol("Read Settingan $LimitFindGems", "Key: LimitFindGems; Value: " & $LimitFindGems)
+
+	$LimitFindDust = IniRead($hFileSetting, "SettingAplikasi", "LimitFindDust", 100)
+	Sleep(10)
+	PesanKonsol("Read Settingan $LimitFindDust ", "Key: LimitFindDust; Value: " & $LimitFindDust)
 
 	$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
 	Sleep(10)
@@ -1871,17 +1875,17 @@ EndFunc
 Func CommandCariSilk()
 ;~ 	ReadSettingan()
 	$iSilk = 0
-	$CountSearchSilk = 0
 	$xSilk = 0
 	$ySilk = 0
+	$CountSearchSilk = 0
 	$CountJob = 0
 	$LimitFindSilk = IniRead($hFileSetting, "SettingAplikasi", "LimitFindSilk", 100)
 	Do
 		$CariSilk = _ImageSearchArea( $ArrayImgSilks[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xSilk, $ySilk, 90)
 		$iSilk += 1
+		$CountSearchSilk += 1
 		If $iSilk = 4 Then $iSilk = 0
 		Sleep(Int($DelaySearchImage))
-		$CountSearchSilk += 1
 		PesanKonsol("Searching Silk, Limit: " & $LimitFindSilk & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
 		If $CountSearchSilk = Int($LimitFindSilk) Then
 			PesanKonsol("Maksimum Stack Reach", "Switch Searching Silk To Gems")
@@ -1890,10 +1894,10 @@ Func CommandCariSilk()
 	Until $CariSilk = 1
 	Sleep(200)
 	If $CariSilk = 1 Then
-		Sleep(100)
+		Sleep(200)
 		PesanKonsol("Silk Found", "Using Image: " & $iSilk & " PosX: " & $xSilk & " PosY: " & $ySilk)
 		Sleep(Int(Number($DelayGetJob)))
-		MouseClick("left", $ySilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
+		MouseClick("left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 		$TotalPickSilks += 1
 		MouseMove(100, 395, 3)
 		PesanKonsol("Collecting Silk", "PosX: " & $xSilk & " PosY: " & $ySilk & " Total Silk Collected: " & $TotalPickSilks)
@@ -2126,6 +2130,131 @@ Func CommandCariGems()
 	CommandCariGems()
 EndFunc
 
+Func CommandCariDust()
+	#Region Deklarasi
+	$iDust = 0
+	$xDust = 0
+	$yDust = 0
+	$CountSearchDust = 0
+	Local $DustFound = 0
+	$CountJob = 0
+	$xJob = 0
+	$yJob = 0
+	$LimitFindDust = IniRead($hFileSetting, "SettingAplikasi", "LimitFindDust", 100)
+	#EndRegion
+	#Region Loop Cari Crystal
+	Do
+		$CariDust = _ImageSearchArea( $ArrayImgFindCrystal[$iDust], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xDust, $yDust, 80)
+		$iDust += 1
+		$CountSearchDust += 1
+		If $iDust = 4 Then $iDust = 0
+		Sleep(Int($DelaySearchImage))
+		PesanKonsol( "Searching Crsytal, Limit: " & $LimitFindDust & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchDust & " Using Image: " & $iDust)
+		If $CountSearchDust = Int($LimitFindDust) Then
+			PesanKonsol("Maksimum Stack Reach", "Switch Searching Magic Dust To Gems")
+			CommandCariGems()
+		EndIf
+	Until $CariDust = 1
+	#EndRegion
+	Sleep(200)
+	If $CariDust = 1 Then
+		Sleep(100)
+		PesanKonsol("Magic Dust Found", "Using Image: " & $iDust & "; PosX: " & $xDust & " PosY: " & $yDust)
+		Sleep(Int(Number($DelayGetJob)))
+		MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+		$TotalPickCrystals += 1
+		MouseMove(100, 395, 3)
+		PesanKonsol("Collecting Crsytal", "PosX: " & $xDust & " PosY: " & $yDust & " Total Collected Crystals: " & $TotalPickCrystals)
+		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
+		$CountSearchDust = 0
+		$GetJobDust = IniRead( $hFileSetting, "SetupJob", "Crystal", 1)
+		$PickJobDust = 0
+		Switch $GetJobDust
+			Case 1
+				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Small Flacon)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case 2
+				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Alchemy Kit)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc38, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case 3
+				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Crystal Ball)") ; 4 ornamental window
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc39, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+			Case Else
+				PesanKonsol("Searching Job Crystal", "Using Job: " & $GetJobDust & "(Small Flacon)")
+				Do
+					$PickJobDust = _ImageSearch( $imgsrc37, 1, $xJob, $yJob, 65)
+					Sleep(Int($DelaySearchImage))
+					$CountJob += 1
+					If $CountJob = 8 Then
+						Sleep(200)
+						MouseClick( "left", 100, 395, 1, 3)
+						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
+						Sleep(200)
+						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
+						Sleep(200)
+						MouseMove(100, 395, 3)
+						$CountJob = 0
+					EndIf
+				Until $PickJobDust = 1
+		EndSwitch
+		If $PickJobDust = 1 Then
+			Sleep(Int($DelayPickJob))
+			MouseClick("left", $xJob, $yJob, 1, 8)
+			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobDust)
+			Sleep(200)
+			MouseMove(100, 395, 3)
+			$xDust = 0
+			$yDust = 0
+			$xJob = 0
+			$yJob = 0
+		EndIf
+	Endif
+
+	CommandCariDust()
+EndFunc
+
 Func CommandRestart()
 	Sleep(Random(1000, 3000))
 	ShellExecute(@ScriptFullPath)
@@ -2210,9 +2339,9 @@ Func CommandSetPosisiKota()
 	Sleep(800)
 EndFunc
 
-Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSlk, $tElx, $tDst, $tGem, $CurrTitle = "Elvenar AutoClick Log")
+Func CommandSetTitle($__Resc, $__Gold, $__Metal, $__Plank, $__Marble, $__Crystal, $__Scroll, $__Silk, $__Elixir, $__Dust, $__Gems, $CurrTitle = "Elvenar AutoClick Log")
 	Sleep(300)
-	Local $AddTitle = " [R:" & $tres & "|G:" & $tGold & "|Mt:" & $tMetal & "|P:" & $tPlank & "|Ma:" & $tMarb & "|Cr:" & $tCry & "|Sc:" & $tSco & "|Sl:" & $tSlk & "|El:" & $tElx & "|Ds:" & $tDst & "|Gm:" & $tGem & "]"
+	Local $AddTitle = " [R:" & $__Resc & "|G:" & $__Gold & "|Mt:" & $__Metal & "|P:" & $__Plank & "|Ma:" & $__Marble & "|Cr:" & $__Crystal & "|Sc:" & $__Scroll & "|Sl:" & $__Silk & "|El:" & $__Elixir & "|Ds:" & $__Dust & "|Gm:" & $__Gems & "]"
 	$tSetTitle = $CurrTitle & $addTitle
 ;~ 	WinSetTitle( $CurrTitle, "", $tSetTitle)
 	DllCall( "Kernel32.dll", "bool", "AllocConsole")
@@ -2223,32 +2352,32 @@ Func CommandSetTitle($tRes, $tGold, $tMetal, $tPlank, $tMarb, $tCry, $tSco, $tSl
 		_FileCreate( @ScriptDir & "\log\Elvenar.log")
 		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
 		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", 0)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Resc)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Gold)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Metal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Plank)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Marble)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Crystal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Scroll)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Silk)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Elixir)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Dust)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Gems)
 		FileClose(@ScriptDir & "\log\Elvenar.log")
 	Else
 		FileOpen(@ScriptDir & "\log\Elvenar.log", 2)
 		FileWriteLine( @ScriptDir & "\log\Elvenar.log", "Elvenar AutoClick Log" & _Now())
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tres)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tGold)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMetal)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tPlank)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tMarb)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tCry)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSco)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tSlk)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tElx)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tDst)
-		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $tGem)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Resc)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Gold)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Metal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Plank)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Marble)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Crystal)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Scroll)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Silk)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Elixir)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Dust)
+		FileWriteLine( @ScriptDir & "\log\Elvenar.log", $__Gems)
 		FileClose(@ScriptDir & "\log\Elvenar.log")
 	EndIf
 EndFunc
