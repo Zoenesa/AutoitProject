@@ -1889,7 +1889,7 @@ Func CommandCariSilk()
 		PesanKonsol("Searching Silk, Limit: " & $LimitFindSilk & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchSilk & " Using Image: " & $iSilk)
 		If $CountSearchSilk = Int($LimitFindSilk) Then
 			PesanKonsol("Maksimum Stack Reach", "Switch Searching Silk To Gems")
-			CommandCariGems()
+			CommandCariDust()
 		EndIf
 	Until $CariSilk = 1
 	Sleep(200)
