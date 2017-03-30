@@ -1,13 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.3.6.1.Exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.6.1_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.3.7.1.Exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.7.1_X64.Exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=1.3.6.2
+#AutoIt3Wrapper_Res_Fileversion=1.3.7.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -828,14 +828,17 @@ Func CommandCariResource()
 		$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
 		$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
 		$GetJobResource = IniRead( $hFileSetting, "SetupJob", "Resource", 1)
+		$SearchAreaTop = IniRead($hFileSetting,"WorkShopStat","TopX",933)
+		$SearchAreaLeft = IniRead($hFileSetting,"WorkShopStat","TopY",509)
+		$SearchAreaRight = IniRead($hFileSetting,"WorkShopStat","wRight",1140)
+		$SearchAreaBottom = IniRead($hFileSetting,"WorkShopStat","hBottom",605)
 	#EndRegion
 	#Region Loop Pencarian Image
 	Do
 		;SearchArea WorkShop
 		;x 371, y 264, r 1018, b 523
 
-		$CariResource = _ImageSearchArea( $ArrayImgResc[$iResc], 1, 371, 264, 1018, 523, $xRes, $yRes, Int(Number($t__Resc)))
-;~ 		$CariResource = _ImageSearchArea( $ArrayImgResc[$iResc], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xRes, $yRes, 90)
+		$CariResource = _ImageSearchArea( $ArrayImgResc[$iResc], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xRes, $yRes, Int(Number($t__Resc)))
 		$iResc += 1
 		If $iResc = 4 Then $iResc = 0
 		$CountSearchResc += 1
