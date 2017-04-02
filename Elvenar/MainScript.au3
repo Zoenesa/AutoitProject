@@ -1,13 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.3.7.1.Exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.3.7.1_X64.Exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.4.2.1.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.4.2.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=1.3.7.1
+#AutoIt3Wrapper_Res_Fileversion=1.4.2.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -212,7 +212,7 @@ If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$TotalPickCrystals = Int($hFileRead[6])
 	$TotalPickScrolls = Int($hFileRead[7])
 	$TotalPickSilks = Int($hFileRead[8])
-	$tempTitle = "Elvenar AutoClick Log [R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "]"
+	$tempTitle = "Elvenar AutoClick Log [R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "; El:" & $TotalPickElixir & "; Ds:" & $TotalPickDust & "; Gm:" & $TotalPickGems & "]"
 	_WinApi_SetConsoleTitle($tempTitle)
 Else
 _WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:0; Cr:0; Sc:0; Sl:0]")
@@ -832,6 +832,9 @@ Func CommandCariResource()
 		$SearchAreaLeft = IniRead($hFileSetting,"WorkShopStat","TopY",509)
 		$SearchAreaRight = IniRead($hFileSetting,"WorkShopStat","wRight",1140)
 		$SearchAreaBottom = IniRead($hFileSetting,"WorkShopStat","hBottom",605)
+;~ 		MouseMove($SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove($SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Pencarian Image
 	Do
@@ -1057,6 +1060,13 @@ Func CommandCariGold()
 		$xFalseWindw = 0
 		$yFalseWindw = 0
 		$LimitFindGold = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGold", 90)
+		$SearchAreaTop = IniRead($hFileSetting,"ResidenceStat","TopX",561)
+		$SearchAreaLeft = IniRead($hFileSetting,"ResidenceStat","TopY",147)
+		$SearchAreaRight = IniRead($hFileSetting,"ResidenceStat","wRight",1268)
+		$SearchAreaBottom = IniRead($hFileSetting,"ResidenceStat","hBottom",648)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region
 	Do
@@ -1138,6 +1148,13 @@ Func CommandCariMetal()
 	$xJob = 0
 	$yJob = 0
 	$LimitFindMetal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMetal", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"MetalStat","TopX",498)
+		$SearchAreaLeft = IniRead($hFileSetting,"MetalStat","TopY",273)
+		$SearchAreaRight = IniRead($hFileSetting,"MetalStat","wRight",1019)
+		$SearchAreaBottom = IniRead($hFileSetting,"MetalStat","hBottom",505)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Pencarian Metal
 	Do
@@ -1268,6 +1285,13 @@ Func CommandCariCrystal()
 	$xJob = 0
 	$yJob = 0
 	$LimitFindCrystal = IniRead($hFileSetting, "SettingAplikasi", "LimitFindCrystal", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"CrystalStat","TopX",498)
+		$SearchAreaLeft = IniRead($hFileSetting,"CrystalStat","TopY",273)
+		$SearchAreaRight = IniRead($hFileSetting,"CrystalStat","wRight",1019)
+		$SearchAreaBottom = IniRead($hFileSetting,"CrystalStat","hBottom",505)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Cari Crystal
 	Do
@@ -1393,6 +1417,13 @@ Func CommandCariElixir()
 	$xJob = 0
 	$yJob = 0
 	$LimitFindElixir = IniRead($hFileSetting, "SettingAplikasi", "LimitFindElixir", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"ElixirStat","TopX",487)
+		$SearchAreaLeft = IniRead($hFileSetting,"ElixirStat","TopY",436)
+		$SearchAreaRight = IniRead($hFileSetting,"ElixirStat","wRight",772)
+		$SearchAreaBottom = IniRead($hFileSetting,"ElixirStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 
 	#Region Loop Pencarian Metal
@@ -1531,6 +1562,13 @@ Func CommandCariPlank()
 	$xJob = 0
 	$yJob = 0
 	$LimitFindPlank = IniRead($hFileSetting, "SettingAplikasi", "LimitFindPlank", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"PlankStat","TopX",1050)
+		$SearchAreaLeft = IniRead($hFileSetting,"PlankStat","TopY",368)
+		$SearchAreaRight = IniRead($hFileSetting,"PlankStat","wRight",1308)
+		$SearchAreaBottom = IniRead($hFileSetting,"PlankStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Cari Plank
 	Do
@@ -1663,6 +1701,13 @@ Func CommandCariMarble()
 	#EndRegion
 	#Region Loop Cari Marble
 	$LimitFindMarble = IniRead($hFileSetting, "SettingAplikasi", "LimitFindMarble", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"MarbleStat","TopX",874)
+		$SearchAreaLeft = IniRead($hFileSetting,"MarbleStat","TopY",412)
+		$SearchAreaRight = IniRead($hFileSetting,"MarbleStat","wRight",1065)
+		$SearchAreaBottom = IniRead($hFileSetting,"MarbleStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	Do
 		$CariMarble = _ImageSearchArea( $ArrayImgFindMarble[$iMarble], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMarble, $yMarble, Int(Number($t__Marble)))
 		$iMarble += 1
@@ -1789,6 +1834,13 @@ Func CommandCariScroll()
 	$yJob = 0
 	$CountJob = 0
 	$LimitFindScroll = IniRead($hFileSetting, "SettingAplikasi", "LimitFindScroll", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"ScrollStat","TopX",945)
+		$SearchAreaLeft = IniRead($hFileSetting,"ScrollStat","TopY",472)
+		$SearchAreaRight = IniRead($hFileSetting,"ScrollStat","wRight",1188)
+		$SearchAreaBottom = IniRead($hFileSetting,"ScrollStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	Do
 		$CariScroll = _ImageSearchArea( $ArrayImgScroll[$iScrol], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xScrol, $yScrol, Int(Number($t__Scroll)))
 		$iScrol += 1
@@ -1905,6 +1957,13 @@ Func CommandCariSilk()
 	$CountSearchSilk = 0
 	$CountJob = 0
 	$LimitFindSilk = IniRead($hFileSetting, "SettingAplikasi", "LimitFindSilk", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"SilkStat","TopX",487)
+		$SearchAreaLeft = IniRead($hFileSetting,"SilkStat","TopY",430)
+		$SearchAreaRight = IniRead($hFileSetting,"SilkStat","wRight",772)
+		$SearchAreaBottom = IniRead($hFileSetting,"SilkStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	Do
 		$CariSilk = _ImageSearchArea( $ArrayImgSilks[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xSilk, $ySilk, Int(Number($t__Silk)))
 		$iSilk += 1
@@ -2031,6 +2090,13 @@ Func CommandCariDust()
 		$xJob = 0
 		$yJob = 0
 		$LimitFindDust = IniRead($hFileSetting, "SettingAplikasi", "LimitFindDust", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"MagicDustStat","TopX",487)
+		$SearchAreaLeft = IniRead($hFileSetting,"MagicDustStat","TopY",436)
+		$SearchAreaRight = IniRead($hFileSetting,"MagicDustStat","wRight",772)
+		$SearchAreaBottom = IniRead($hFileSetting,"MagicDustStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Cari Crystal
 	Do
@@ -2052,7 +2118,7 @@ Func CommandCariDust()
 		PesanKonsol("Magic Dust Found", "Using Image: " & $iDust & "; PosX: " & $xDust & " PosY: " & $yDust)
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
-		$TotalPickCrystals += 1
+		$TotalPickDust += 1
 		MouseMove(100, 395, 3)
 		PesanKonsol("Collecting Magic Dust", "PosX: " & $xDust & " PosY: " & $yDust & " Total Collected Dust: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
@@ -2156,6 +2222,13 @@ Func CommandCariGems()
 		$xJob = 0
 		$yJob = 0
 		$LimitFindGems = IniRead($hFileSetting, "SettingAplikasi", "LimitFindGems", 100)
+		$SearchAreaTop = IniRead($hFileSetting,"GemsStat","TopX",759)
+		$SearchAreaLeft = IniRead($hFileSetting,"GemsStat","TopY",498)
+		$SearchAreaRight = IniRead($hFileSetting,"GemsStat","wRight",961)
+		$SearchAreaBottom = IniRead($hFileSetting,"GemsStat","hBottom",670)
+;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
+;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
+;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Cari Gems
 		Do
@@ -2187,7 +2260,7 @@ Func CommandCariGems()
 		PesanKonsol("Gems Found", "Using Image: " & $iGems & "; PosX: " & $xGem & " PosY: " & $yGem)
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
-		$TotalPickCrystals += 1
+		$TotalPickGems += 1
 		MouseMove(100, 395, 3)
 		PesanKonsol("Collecting Gems", "PosX: " & $xGem & " PosY: " & $yGem & " Total Collected Gems: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
