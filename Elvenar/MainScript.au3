@@ -188,6 +188,7 @@ Global $tSetTitle
 	HotKeySet("{F7}","FindSponsorWnd")
 #EndRegion
 
+#Region Inisial
 DllCall( "Kernel32.dll", "bool", "AllocConsole")
 If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$hFileOpen = FileOpen(@ScriptDir & "\log\Elvenar.log", 0)
@@ -226,9 +227,12 @@ ReadSettingan()
 
 Sleep(500)
 WinActivate("Elvenar - Fantasy City Builder Game")
-
+;~ WinSetOnTop("Elvenar - Fantasy City Builder Game - Google Chrome", "", 0)
+WinSetOnTop($tempTitle, "", 1)
 Sleep(30000)
 FindSponsorWnd()
+
+#EndRegion
 
 Func ReadSettingan()
 
@@ -794,10 +798,6 @@ Func ReadSettingan()
 	Return 1
 EndFunc
 
-Func WriteSetingan()
-
-EndFunc
-
 If $StartPointerPosition = 1 Then
 	CommandSetPosisiKota()
 ;~ 	CenteringScreen()
@@ -815,7 +815,6 @@ Func CommandCariResource()
 		MouseMove(100, 395, 3)
 		$firstRescmove = 0
 	EndIf
-
 	#Region Deklarasi Sub
 		$iResc = 0
 		$CountSearchResc = 0
@@ -824,7 +823,6 @@ Func CommandCariResource()
 		$yJob = 0
 		$CountJob = 0
 		$IniStack = IniRead( $hFileSetting, "SettingAplikasi", "ResourceStack", 30)
-		;Total Limit Searching Resource dari File Config
 		$LimitFindResource = IniRead($hFileSetting, "SettingAplikasi", "LimitFindResource", 100)
 		$OnlySearchResource = IniRead($hFileSetting, "SettingAplikasi", "OnlyResource", 1)
 		$GetJobResource = IniRead( $hFileSetting, "SetupJob", "Resource", 1)
@@ -832,15 +830,9 @@ Func CommandCariResource()
 		$SearchAreaLeft = IniRead($hFileSetting,"WorkShopStat","TopY",509)
 		$SearchAreaRight = IniRead($hFileSetting,"WorkShopStat","wRight",1140)
 		$SearchAreaBottom = IniRead($hFileSetting,"WorkShopStat","hBottom",605)
-;~ 		MouseMove($SearchAreaTop, $SearchAreaLeft, 30)
-;~ 		MouseMove($SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
 	#EndRegion
 	#Region Loop Pencarian Image
 	Do
-		;SearchArea WorkShop
-		;x 371, y 264, r 1018, b 523
-
 		$CariResource = _ImageSearchArea( $ArrayImgResc[$iResc], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xRes, $yRes, Int(Number($t__Resc)))
 		$iResc += 1
 		If $iResc = 4 Then $iResc = 0
@@ -1051,9 +1043,6 @@ Func CommandCariGold()
 		$firstGoldMove = 0
 	EndIf
 
-	;SearchArea Residence
-	;x 561, y 147, r 1268, b 648
-
 	#Region Deklarasi
 		$iGold = 0
 		$CountSearchGold = 0
@@ -1070,8 +1059,8 @@ Func CommandCariGold()
 	#EndRegion
 	#Region
 	Do
-		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, 561, 147, 1268, 648, $xGold, $yGold, Int(Number($t__Gold)))
-;~ 		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, 60)
+;~ 		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, 561, 147, 1268, 648, $xGold, $yGold, Int(Number($t__Gold)))
+		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, Int(Number($t__Gold)))
 		Local $FalseWindw = _ImageSearch( $imgTutupWindow, 1, $xFalseWindw, $yFalseWindw, 10)
 		If $FalseWindw = 1 Then
 			Sleep(100)
