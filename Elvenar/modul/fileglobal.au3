@@ -106,9 +106,9 @@ Global $imgsrc51 = $imgPathElixir & "Elixirvar.bmp"
 Global $ArrayImgElixir[4] = [$imgsrc48, $imgsrc49, $imgsrc50, $imgsrc51]
 
 Global $imgsrc52 = $imgPathGems & "GemH.bmp"
-Global $imgsrc53 = $imgPathGems & "GemH.bmp"
-Global $imgsrc54 = $imgPathGems & "GemH.bmp"
-Global $imgsrc55 = $imgPathGems & "GemH.bmp"
+Global $imgsrc53 = $imgPathGems & "GemL.bmp"
+Global $imgsrc54 = $imgPathGems & "GemM.bmp"
+Global $imgsrc55 = $imgPathGems & "GemVar.bmp"
 
 Global $ArrayImgGems[4] = [$imgsrc52, $imgsrc53, $imgsrc54, $imgsrc55]
 
