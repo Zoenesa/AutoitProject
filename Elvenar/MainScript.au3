@@ -267,7 +267,7 @@ Func ReadSettingan()
 ;~ 					PesanKonsol("Write Ini", $hFilesConfigsIni[0])
 ;~ 					Sleep(1000)
 ;~ 					IniWrite($hFileSetting, "Test1", "Test", "1")
-					IniWrite($hFileSetting, "", "", "")
+;~ 					IniWrite($hFileSetting, "", "", "")
 ;~ 				Case $hFilesConfigsIni[1]
 ;~ 					PesanKonsol("File Create ..\config\Resources.ini","")
 ;~ 					Sleep(1000)
