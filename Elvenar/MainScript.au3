@@ -1,13 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.6.2.1.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.2.1_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.6.3.1.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.3.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=1.6.2.1
+#AutoIt3Wrapper_Res_Fileversion=1.6.3.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -203,6 +203,8 @@ If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 		FileWriteLine($hFileOpen, 0)
 		FileWriteLine($hFileOpen, 0)
 		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
+		FileWriteLine($hFileOpen, 0)
 	EndIf
 	FileClose($hFileOpen)
 	$TotalPickResources = Int($hFileRead[1])
@@ -213,6 +215,9 @@ If FileExists(@ScriptDir & "\log\Elvenar.log") Then
 	$TotalPickCrystals = Int($hFileRead[6])
 	$TotalPickScrolls = Int($hFileRead[7])
 	$TotalPickSilks = Int($hFileRead[8])
+	$TotalPickElixir = Int($hFileRead[9])
+	$TotalPickDust = Int($hFileRead[10])
+	$TotalPickGems = Int($hFileRead[11])
 	$tempTitle = "Elvenar AutoClick Log [R:" & $TotalPickResources & "; G:" & $TotalPickGolds & "; Mt:" & $TotalPickMetals & "; P:" & $TotalPickPlanks & "; Ma:" & $TotalPickMarbles & "; Cr:" & $TotalPickCrystals & "; Sc:" & $TotalPickScrolls & "; Sl:" & $TotalPickSilks & "; El:" & $TotalPickElixir & "; Ds:" & $TotalPickDust & "; Gm:" & $TotalPickGems & "]"
 	_WinApi_SetConsoleTitle($tempTitle)
 Else
@@ -802,12 +807,17 @@ If $StartPointerPosition = 1 Then
 EndIf
 
 Func CommandCariResource()
+
 	If $firstRescmove = 1 Then
+	$StartPosX = IniRead( $hFileSetting, "WorkShopStat", "StartPosX", 650)
+	$StartPosY = IniRead( $hFileSetting, "WorkShopStat", "StartPosY", 545)
+	$EndPosX = IniRead( $hFileSetting, "WorkShopStat", "EndPosX", 346)
+	$EndPosY = IniRead( $hFileSetting, "WorkShopStat", "EndPosY", 294)
 		Sleep(Random(300,500))
 		MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3) ;1237, 602
 		Sleep(Random(500, 800))
 		MouseDown( "left")
-		MouseMove( Int(Number(346)), Int(Number(294)), 20);346, 294
+		MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);346, 294
 		Sleep(100)
 		MouseUp( "left")
 		MouseMove(100, 395, 3)
@@ -1029,11 +1039,15 @@ EndFunc
 Func CommandCariGold()
 
 	If $firstGoldMove = 1 Then
+	$StartPosX = IniRead( $hFileSetting, "ResidenceStat", "StartPosX", 346)
+	$StartPosY = IniRead( $hFileSetting, "ResidenceStat", "StartPosY", 294)
+	$EndPosX = IniRead( $hFileSetting, "ResidenceStat", "EndPosX", 1133)
+	$EndPosY = IniRead( $hFileSetting, "ResidenceStat", "EndPosY", 240)
 		Sleep(Random(300,500))
-		MouseMove( Int(Number(346)), Int(Number(294)), 3)
+		MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3)
 		Sleep(Random(500, 800))
 		MouseDown( "left")
-		MouseMove( Int(Number(1133)), Int(Number(240)), 20);1120,252
+		MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 30);1120,252
 		Sleep(100)
 		MouseUp( "left")
 		Sleep(100)
@@ -1082,9 +1096,13 @@ Func CommandCariGold()
 					CommandSetPosisiKota()
 				Endif
 			;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
+			$StartPosX = IniRead( $hFileSetting, "MetalStat", "StartPosX", 1133)
+			$StartPosY = IniRead( $hFileSetting, "MetalStat", "StartPosY", 240)
+			$EndPosX = IniRead( $hFileSetting, "MetalStat", "EndPosX", 346)
+			$EndPosY = IniRead( $hFileSetting, "MetalStat", "EndPosY", 294)
 			PesanKonsol("Switch Searching Resource to Metal")
 			Sleep(Random(300,500))
-			MouseMove( Int(Number(1133)), Int(Number(240)), 3)
+			MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3)
 			Sleep(Random(500, 800))
 			MouseDown( "left")
 			MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20)
@@ -2228,13 +2246,13 @@ Func CommandCariGems()
 			If $CountSearchGem = Int($LimitFindGems) Then
 				PesanKonsol("Maksimum Stack Reach", "Switch Searching Dust To Resource")
 				Sleep(Random(300,500))
-				MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 3)
-				Sleep(Random(500, 800))
-				MouseDown( "left")
-				MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 20)
-				Sleep(100)
-				MouseUp( "left")
-
+;~ 				MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 3)
+;~ 				Sleep(Random(500, 800))
+;~ 				MouseDown( "left")
+;~ 				MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 20)
+;~ 				Sleep(100)
+;~ 				MouseUp( "left")
+				Send( "{HOME}")
 				$firstRescmove = 1
 				$firstGoldMove = 1
 				CommandCariResource()
