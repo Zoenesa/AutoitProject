@@ -11,6 +11,7 @@ Global $imgPathGold = @ScriptDir & "\img\08Gold\"
 Global $imgPathElixir = @ScriptDir & "\img\09Elixir\"
 Global $imgPathGems = @ScriptDir & "\img\10Gems\"
 Global $imgPathDust = @ScriptDir & "\img\11Dust\"
+Global $imgPathGranit = @ScriptDir & "\img\12Granite\"
 
 Global $imgSrcBarrack = $imgPathMain & "Barracks.bmp"
 
@@ -133,3 +134,10 @@ Global $imgServer2 = $imgPathMain & "Felyndral.bmp"
 Global $imgServer3 = $imgPathMain & "Winyandor.bmp"
 
 Global $imgTVhwnd = $imgPathMain & "tvOK.bmp"
+
+Global $imgGranit1 = $imgPathGranit & "GranitS.bmp"
+Global $imgGranit2 = $imgPathGranit & "GranitL.bmp"
+Global $imgGranit3 = $imgPathGranit & "GranitW.bmp"
+Global $imgGranit4 = $imgPathGranit & "GranitVar.bmp"
+
+Global $ArrayImgGranit[4] = [$imgGranit1, $imgGranit2, $imgGranit3, $imgGranit4]
