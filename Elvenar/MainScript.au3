@@ -80,7 +80,6 @@ Local Static $LimitFindSilk
 Local Static $LimitFindElixir
 Local Static $LimitFindDust
 Local Static $LimitFindGems
-Local Static $limitFindGranite
 Local Static $OnlySearchResource
 Local Static $boolSearchArea
 Local Static $SearchAreaTop
@@ -89,7 +88,6 @@ Local Static $SearchAreaRight
 Local Static $SearchAreaBottom
 
 Local $t__Resc, $t__Gold, $t__Metal, $t__Plank, $t__Marble, $t__Crystal, $t__Scroll, $t__Silk, $t__Elixir, $t__Dust, $t__Gems
-Local $t__Granit
 
 Local Static $GetJobResource
 Local Static $GetJobMetal
@@ -118,7 +116,6 @@ Local Static $PlankStack
 Local Static $MarbleStack
 Local Static $CrystalStack
 Local Static $ScrollStack
-Local Static $GranitStack
 
 Local Static $SilkStack
 Local Static $ReadServer
@@ -129,7 +126,6 @@ Local Static $MetalFound = 0
 Local $xRes = 0, $yRes = 0, $xJob = 0, $yJob = 0, $xPosReset = 0, $yPosReset = 0
 Local $xGold = 0, $yGold = 0, $xServer = 0, $yServer = 0
 Local $CountJob = 0, $GoldFailClickX = 0, $GoldFailClickY = 0
-Local $xGranit = 0, $yGranit = 0
 
 Global $TotalPickResources = 0
 Global $TotalPickGolds = 0
@@ -142,7 +138,6 @@ Global $TotalPickSilks = 0
 Global $TotalPickElixir = 0
 Global $TotalPickDust = 0
 Global $TotalPickGems = 0
-Global $TotalPickGranit = 0
 
 Global $UPosXRes
 Global $UPosYRes
@@ -166,8 +161,6 @@ Global $UPosXDust
 Global $UPosYDust
 Global $UPosXGem
 Global $UPosYGem
-Global $UPosXGranit
-Global $UPosYGranit
 
 Global $tSetTitle
 
@@ -680,7 +673,6 @@ Func ReadSettingan()
 		$t__Elixir = IniRead($hFileSetting, "ElixirStat", "Tolerance", 95)
 		$t__Dust = IniRead($hFileSetting, "MagicDustStat", "Tolerance", 90)
 		$t__Gems = IniRead($hFileSetting, "GemsStat", "Tolerance", 85)
-		$t__Granit = IniRead($hFileSetting, "GraniteMine", "Tolerance", 70)
 
 	#EndRegion
 
@@ -778,8 +770,6 @@ Func ReadSettingan()
 	PesanKonsol("Read Settingan $UPosYGems", "Key: PickYGems; Value: " & $UPosYGem)
 	;------------------23
 
-
-
 	$StartPosX = IniRead($hFileSetting, "GetCenterArea", "StartPosX", 650)
 	Sleep(10)
 	PesanKonsol("Read Settingan $StartPosX", "Key: StartPosX; Value: " & $StartPosX)
@@ -796,19 +786,6 @@ Func ReadSettingan()
 	Sleep(10)
 	PesanKonsol("Read Settingan $EndPosY", "Key: EndPosY; Value: " & $EndPosY)
 	;------------------27
-
-	#EndRegion
-
-	#Region CariGranit
-
-	$UPosXGranit = IniRead($hFileSetting, "GraniteMine", "PickX", 8)
-	Sleep(10)
-	PesanKonsol("Read Settingan $UPosXGranite", "Key: PickX; Value: " & $UPosXGranit)
-
-	$UPosYGranit = IniRead($hFileSetting, "GraniteMine", "PickY", 60)
-	Sleep(10)
-	PesanKonsol("Read Settingan $UPosYGranite", "Key: PickY; Value: " & $UPosYGranit)
-
 
 	#EndRegion
 
@@ -2275,10 +2252,10 @@ Func CommandCariGems()
 ;~ 				MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 20)
 ;~ 				Sleep(100)
 ;~ 				MouseUp( "left")
-;~ 				Send( "{HOME}")
+				Send( "{HOME}")
 				$firstRescmove = 1
 				$firstGoldMove = 1
-				CommandCariGranit()
+				CommandCariResource()
 			EndIf
 	Until $CariGems = 1
 	#EndRegion
@@ -2379,101 +2356,6 @@ Func CommandCariGems()
 	Endif
 
 	CommandCariGems()
-EndFunc
-
-Func CommandCariGranit()
-
-	If $firstGoldMove = 1 Then
-	$StartPosX = IniRead( $hFileSetting, "GraniteMine", "StartPosX", 346)
-	$StartPosY = IniRead( $hFileSetting, "GraniteMine", "StartPosY", 294)
-	$EndPosX = IniRead( $hFileSetting, "GraniteMine", "EndPosX", 1133)
-	$EndPosY = IniRead( $hFileSetting, "GraniteMine", "EndPosY", 240)
-		Sleep(Random(300,500))
-		MouseMove( Int(Number($StartPosX)), Int(Number($StartPosY)), 3)
-		Sleep(Random(500, 800))
-		MouseDown( "left")
-		MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 30);1120,252
-		Sleep(100)
-		MouseUp( "left")
-		Sleep(100)
-		MouseMove(100, 395, 3)
-		$firstGoldMove = 0
-	EndIf
-
-	#Region Deklarasi
-		$iGold = 0
-		$CountSearchGold = 0
-		$xFalseWindw = 0
-		$yFalseWindw = 0
-		$LimitFindGold = IniRead($hFileSetting, "GraniteMine", "LimitFindGranite", 80)
-		$SearchAreaTop = IniRead($hFileSetting,"GraniteMine","AreaLeft",561)
-		$SearchAreaLeft = IniRead($hFileSetting,"GraniteMine","AreaTop",147)
-		$SearchAreaRight = IniRead($hFileSetting,"GraniteMine","AreaRight",1268)
-		$SearchAreaBottom = IniRead($hFileSetting,"GraniteMine","AreaBottom",648)
-		$UPosXGold = IniRead($hFileSetting, "GraniteMine", "PickX", 8)
-		$UPosYGold = IniRead($hFileSetting, "GraniteMine", "PickY", 60)
-		$t__Granit = IniRead($hFileSetting, "GraniteMine", "Tolerance", 70)
-	#EndRegion
-
-	#Region
-	Do
-;~ 		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, 561, 147, 1268, 648, $xGold, $yGold, Int(Number($t__Gold)))
-		$CariGold = _ImageSearchArea( $ArrayImgGranit[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, Int(Number($t__Granit)))
-		Local $FalseWindw = _ImageSearch( $imgTutupWindow, 1, $xFalseWindw, $yFalseWindw, 10)
-		If $FalseWindw = 1 Then
-			Sleep(100)
-			MouseClick( "left", $xFalseWindw, $yFalseWindw, 1, 8)
-			Sleep(100)
-			MouseMove(100, 395, 3)
-		EndIf
-		$iGold += 1
-		If $iGold = 3 Then $iGold = 0
-		$CountSearchGold += 1
-		Sleep(Int($DelaySearchImage))
-		PesanKonsol( "Searching Granite, Limit: " &$LimitFindGold & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchGold + 1 & " Using Image: " & $iGold)
-		If $CountSearchGold = Int($LimitFindGold) Then
-			PesanKonsol( "Maximum Stack Granite Reach", "Executing Back To Center Home")
-			;Coba Reset Web While Counting Limit
-				$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
-				If $FindRefreshBtn = 1 Then
-					PesanKonsol("Executing To Home")
-					MouseClick( "left", $xPosReset, $yPosReset, 8)
-					Sleep(Random(125000, 200000))
-					CommandSetPosisiKota()
-				Endif
-			;Pass Jika Tidak ada Window Refresh dari Server Lanjut Eksekusi Cari Gold
-			Send ("{HOME}")
-			CommandCariResource()
-		EndIf
-
-		$FindRefreshBtn = _ImageSearch( @ScriptDir & "img\03Main\SessionOk.bmp", 1, $xPosReset, $yPosReset, 60)
-		If $FindRefreshBtn = 1 Then
-			PesanKonsol("Executing To Home")
-			MouseClick( "left", $xPosReset, $yPosReset, 8)
-			Sleep(Random(125000, 200000))
-			CommandSetPosisiKota()
-		Endif
-	Until $CariGold = 1
-	#EndRegion
-
-	Sleep(200)
-
-	If $CariGold = 1 Then
-		Sleep(100)
-		PesanKonsol("Gold Found", "PosX: " & $xGold & " PosY: " & $yGold)
-		Sleep(Int(Number($DelayGetJob)))
-		MouseClick( "left", $xGold + $UPosXGold, $yGold + $UPosYGold, 1, 8)
-		$TotalPickGolds += 1
-		MouseMove(100, 395, 3)
-		PesanKonsol("Collecting Gold", "PosX: " & $xGold & " PosY: " & $yGold & " Total Golds Collected: " & $TotalPickGolds)
-		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
-		$xGold = 0
-		$yGold = 0
-		$CountSearchGold = 0
-	EndIf
-
-CommandCariGranit()
-
 EndFunc
 
 Func CommandRestart()
