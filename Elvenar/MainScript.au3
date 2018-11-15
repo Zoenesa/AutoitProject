@@ -1,14 +1,17 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.6.3.1.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.3.1_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.6.5.1.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.5.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
-#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Fix Config & Delay
-#AutoIt3Wrapper_Res_Fileversion=1.6.3.1
+#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Pick & Images Searching
+#AutoIt3Wrapper_Res_Fileversion=1.6.5.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
+#AutoIt3Wrapper_Res_ProductName=Elvenar AutoClick
+#AutoIt3Wrapper_Res_ProductVersion=1.6.5.1
+#AutoIt3Wrapper_Res_CompanyName=ZnsZ
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
 #AutoIt3Wrapper_Res_Language=1033
@@ -51,7 +54,7 @@ Func _ImageSearchArea($RefImage, $resultPosition, $CordX1, $CordY1, $right, $bot
     If $result[0] = "0" Then Return 0
 	$array = StringSplit($result[0], "|")
 	$tempArray = _ArrayToString( $array, "|")
-;~ 	PesanKonsol("Image Array Result: ", $tempArray)
+	PesanKonsol("Image Array Result: ", $tempArray)
     $CordX = Int(Number($array[2]))
     $CordY = Int(Number($array[3]))
 	If $resultPosition = 1 Then
@@ -225,7 +228,7 @@ _WinApi_SetConsoleTitle("Elvenar AutoClick Log") ; & " [R:0; G:0; Mt:0; P:0; Ma:
 EndIf
 WinSetOnTop( "Elvenar AutoClick Log", "", 1)
 WinSetTrans( "Elvenar AutoClick Log", "", 200)
-WinMove( "Elvenar AutoClick Log", "", 1, 15, 797, 105, 3)
+WinMove( "Elvenar AutoClick Log", "", 0, 0, 920, 105, 3)
 DllClose("Kernel32.dll")
 
 ReadSettingan()
@@ -2366,6 +2369,12 @@ EndFunc
 
 Func PesanKonsol( $refMsg, $refComment = " ")
 	ConsoleWrite( "[" & @YEAR & ":" & @MON & ":" & @MDAY & ":" & @HOUR & ":" & @MIN & ":" & @SEC & "]" & $refMsg & "; " & $refComment & @CRLF)
+EndFunc
+
+Func KontrolMouse($UserSleep, $MinRandom, $MaxRandom, $ParamPoxX, $ParamPosY, $ParamSpeed)
+	Sleep(Random($MinRandom, $MaxRandom))
+	MouseClick("left", $ParamPoxX, $ParamPosY, 1, $ParamSpeed)
+	Sleep(200)
 EndFunc
 
 Func CenteringScreen()
