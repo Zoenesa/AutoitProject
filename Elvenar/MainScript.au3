@@ -1,16 +1,16 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.6.5.1.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.5.1_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.6.5.2.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.5.2_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
-#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update Pick & Images Searching
-#AutoIt3Wrapper_Res_Fileversion=1.6.5.1
+#AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update CursorHold
+#AutoIt3Wrapper_Res_Fileversion=1.6.5.2
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_ProductName=Elvenar AutoClick
-#AutoIt3Wrapper_Res_ProductVersion=1.6.5.1
+#AutoIt3Wrapper_Res_ProductVersion=1.6.5.2
 #AutoIt3Wrapper_Res_CompanyName=ZnsZ
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -68,7 +68,8 @@ EndFunc
 Global $Paused
 
 Local $iSection
-
+Local Static $IniCursor
+Local Static $CursorHold
 Local $firstRescmove = 1
 Local $firstGoldMove = 1
 
@@ -792,6 +793,23 @@ Func ReadSettingan()
 
 	#EndRegion
 
+	#Region CursorHold
+	$IniCursor = IniRead($hFileSetting, "SettingAplikasi", "CursorHold", "100|395|3")
+	PesanKonsol("Load IniCursor: " & $IniCursor)
+	Sleep(200)
+	$CursorHold = StringSplit($IniCursor, "|")
+	PesanKonsol("CursorHold Values: " & _ArrayToString($CursorHold))
+	Sleep(200)
+	PesanKonsol("CursorHold[0] = " & $CursorHold[0])
+	Sleep(200)
+	PesanKonsol("CursorHold[1] = " & $CursorHold[1])
+	Sleep(200)
+	PesanKonsol("CursorHold[2] = " & $CursorHold[2])
+	Sleep(200)
+	PesanKonsol("CursorHold[3] = " & $CursorHold[3])
+	Sleep(500)
+	#EndRegion
+
 	Local $t__Array = IniReadSectionNames($hFileSetting)
 	If Not @error Then
 		For $nSection = 1 To $t__Array[0]
@@ -823,7 +841,7 @@ Func CommandCariResource()
 		MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20);346, 294
 		Sleep(100)
 		MouseUp( "left")
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		$firstRescmove = 0
 	EndIf
 	#Region Deklarasi Sub
@@ -883,7 +901,7 @@ Func CommandCariResource()
 		MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 		$TotalPickResources += 1
 		$ResourceStack += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Resource", "PosX: " & $xRes & " PosY: " & $yRes & " Total Resources Collected: " & $TotalPickResources)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$PickJobResource = 0
@@ -898,12 +916,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -917,12 +935,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -936,12 +954,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -955,12 +973,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -974,12 +992,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -993,12 +1011,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1012,12 +1030,12 @@ Func CommandCariResource()
 					If $CountJob = 6 Then
 						Sleep(200)
 						; Ulangi Klik Jika Terjadi Delay GetRequest
-						MouseClick( "left", 100, 395, 1, 3) ;Save Klik
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3])) ;Save Klik
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xRes + $UPosXRes, $yRes + $UPosYRes, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0 ;Loop
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1029,7 +1047,7 @@ Func CommandCariResource()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found Count: " & $CountJob, "Start Production: " & $GetJobResource)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xRes = 0
 			$yRes = 0
 			$xJob = 0
@@ -1054,7 +1072,7 @@ Func CommandCariGold()
 		Sleep(100)
 		MouseUp( "left")
 		Sleep(100)
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		$firstGoldMove = 0
 	EndIf
 
@@ -1070,7 +1088,7 @@ Func CommandCariGold()
 		$SearchAreaBottom = IniRead($hFileSetting,"ResidenceStat","hBottom",648)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region
 	Do
@@ -1081,7 +1099,7 @@ Func CommandCariGold()
 			Sleep(100)
 			MouseClick( "left", $xFalseWindw, $yFalseWindw, 1, 8)
 			Sleep(100)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		EndIf
 		$iGold += 1
 		If $iGold = 3 Then $iGold = 0
@@ -1111,7 +1129,7 @@ Func CommandCariGold()
 			MouseMove( Int(Number($EndPosX)), Int(Number($EndPosY)), 20)
 			Sleep(100)
 			MouseUp( "left")
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			CommandCariMetal()
 		EndIf
 
@@ -1133,7 +1151,7 @@ Func CommandCariGold()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick( "left", $xGold + $UPosXGold, $yGold + $UPosYGold, 1, 8)
 		$TotalPickGolds += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Gold", "PosX: " & $xGold & " PosY: " & $yGold & " Total Golds Collected: " & $TotalPickGolds)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$xGold = 0
@@ -1162,7 +1180,7 @@ Func CommandCariMetal()
 		$SearchAreaBottom = IniRead($hFileSetting,"MetalStat","hBottom",505)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region Loop Pencarian Metal
 	Do
@@ -1186,7 +1204,7 @@ Func CommandCariMetal()
 		MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 		$TotalPickMetals += 1
 ;~ 		Sleep(200)
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol( "Collecting Metal", "PosX: " & $xMetal & " PosY: " & $yMetal & " Total Collected Metals: " & $TotalPickMetals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchMetal = 0
@@ -1201,12 +1219,12 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1219,12 +1237,12 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1237,12 +1255,12 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1255,12 +1273,12 @@ Func CommandCariMetal()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMetal + $UPosXMetal, $yMetal + $UPosYMetal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1271,7 +1289,7 @@ Func CommandCariMetal()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobMetal)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xMetal = 0
 			$yMetal = 0
 			$xJob = 0
@@ -1299,7 +1317,7 @@ Func CommandCariCrystal()
 		$SearchAreaBottom = IniRead($hFileSetting,"CrystalStat","hBottom",505)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region Loop Cari Crystal
 	Do
@@ -1322,7 +1340,7 @@ Func CommandCariCrystal()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 		$TotalPickCrystals += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Crsytal", "PosX: " & $xCrystal & " PosY: " & $yCrystal & " Total Collected Crystals: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchCrystal = 0
@@ -1337,12 +1355,12 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
@@ -1354,12 +1372,12 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
@@ -1371,12 +1389,12 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
@@ -1388,12 +1406,12 @@ Func CommandCariCrystal()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xCrystal + $UPosXCrystal, $yCrystal + $UPosYCrystal, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobCrystal = 1
@@ -1403,7 +1421,7 @@ Func CommandCariCrystal()
 			MouseClick("left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " &$GetJobCrystal)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xCrystal = 0
 			$yCrystal = 0
 			$xJob = 0
@@ -1431,7 +1449,7 @@ Func CommandCariElixir()
 		$SearchAreaBottom = IniRead($hFileSetting,"ElixirStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 
 	#Region Loop Pencarian Metal
@@ -1461,7 +1479,7 @@ Func CommandCariElixir()
 		MouseClick( "left", $xElixir + $UPosXElixir, $yElixir + $UPosYElixir, 1, 8)
 		$TotalPickElixir += 1
 ;~ 		Sleep(200)
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol( "Collecting Elixir", "PosX: " & $xElixir & " PosY: " & $yElixir & " Total Collected Metals: " & $TotalPickElixir)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchElixir = 0
@@ -1476,12 +1494,12 @@ Func CommandCariElixir()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xElixir + $UPosXElixir, $yElixir + $UPosYElixir, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job For Elixir", "Count: " & $CountJob)
@@ -1494,12 +1512,12 @@ Func CommandCariElixir()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xElixir + $UPosXElixir, $yElixir + $UPosYElixir, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1512,12 +1530,12 @@ Func CommandCariElixir()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xElixir + $UPosXElixir, $yElixir + $UPosYElixir, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1530,12 +1548,12 @@ Func CommandCariElixir()
 					$CountJob += 1
 					If $CountJob = 6 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xElixir + $UPosXElixir, $yElixir + $UPosYElixir, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1547,7 +1565,7 @@ Func CommandCariElixir()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobElixir)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xElixir = 0
 			$yElixir = 0
 			$xJob = 0
@@ -1576,7 +1594,7 @@ Func CommandCariPlank()
 		$SearchAreaBottom = IniRead($hFileSetting,"PlankStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region Cari Plank
 	Do
@@ -1599,7 +1617,7 @@ Func CommandCariPlank()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 		$TotalPickPlanks += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Plank", "PosX: " & $xPlank & " PosY: " & $yPlank & " Total Planks Collected: " & $TotalPickPlanks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchPlank = 0
@@ -1614,12 +1632,12 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1632,12 +1650,12 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1650,12 +1668,12 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1668,12 +1686,12 @@ Func CommandCariPlank()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xPlank + int($UPosXPlank), $yPlank + int($UPosYPlank), 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1684,7 +1702,7 @@ Func CommandCariPlank()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Stack Pick Job: " & $GetJobPlank)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xPlank = 0
 			$yPlank = 0
 			$xJob = 0
@@ -1715,7 +1733,7 @@ Func CommandCariMarble()
 		$SearchAreaBottom = IniRead($hFileSetting,"MarbleStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	Do
 		$CariMarble = _ImageSearchArea( $ArrayImgFindMarble[$iMarble], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xMarble, $yMarble, Int(Number($t__Marble)))
 		$iMarble += 1
@@ -1736,7 +1754,7 @@ Func CommandCariMarble()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 		$TotalPickMarbles += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Marble", "PosX: " & $xMarble & " PosY: " & $yMarble & " Total Collected Marbles: " & $TotalPickMarbles)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchMarble = 0
@@ -1751,12 +1769,12 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1769,12 +1787,12 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1787,12 +1805,12 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1805,12 +1823,12 @@ Func CommandCariMarble()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xMarble + $UPosXMarble, $yMarble + $UPosYMarble, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1821,7 +1839,7 @@ Func CommandCariMarble()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobMarble)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xMarble = 0
 			$yMarble = 0
 			$xJob = 0
@@ -1848,7 +1866,7 @@ Func CommandCariScroll()
 		$SearchAreaBottom = IniRead($hFileSetting,"ScrollStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	Do
 		$CariScroll = _ImageSearchArea( $ArrayImgScroll[$iScrol], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xScrol, $yScrol, Int(Number($t__Scroll)))
 		$iScrol += 1
@@ -1867,7 +1885,7 @@ Func CommandCariScroll()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick( "left", $xScrol + $UPosXSilk, $yScrol + $UPosYSilk, 1, 10)
 		$TotalPickScrolls += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Scroll", "PosX: " & $xScrol & " PosY: " & $yScrol & " Total Scrolls Collected: " & $TotalPickScrolls)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchScroll = 0
@@ -1887,7 +1905,7 @@ Func CommandCariScroll()
 						Sleep(200)
 						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1903,7 +1921,7 @@ Func CommandCariScroll()
 						Sleep(300)
 						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1919,7 +1937,7 @@ Func CommandCariScroll()
 						Sleep(300)
 						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob) ; 4 book of spells
@@ -1935,7 +1953,7 @@ Func CommandCariScroll()
 						Sleep(300)
 						MouseClick("left", $xScrol + $UPosXScroll, $yScrol + $UPosYScroll, 1, 10)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -1946,7 +1964,7 @@ Func CommandCariScroll()
 			MouseClick("left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found Count: " & $CountJob, "Start Production: " & $GetJobScroll)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xScrol = 0
 			$yScrol = 0
 			$xJob = 0
@@ -1971,7 +1989,7 @@ Func CommandCariSilk()
 		$SearchAreaBottom = IniRead($hFileSetting,"SilkStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	Do
 		$CariSilk = _ImageSearchArea( $ArrayImgSilks[$iSilk], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xSilk, $ySilk, Int(Number($t__Silk)))
 		$iSilk += 1
@@ -1991,7 +2009,7 @@ Func CommandCariSilk()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 		$TotalPickSilks += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Silk", "PosX: " & $xSilk & " PosY: " & $ySilk & " Total Silk Collected: " & $TotalPickSilks)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchSilk = 0
@@ -2006,12 +2024,12 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -2024,12 +2042,12 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1,8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -2042,12 +2060,12 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -2060,12 +2078,12 @@ Func CommandCariSilk()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick( "left", $xSilk + $UPosXSilk, $ySilk + $UPosYSilk, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 					PesanKonsol("Searching Job", "Count: " & $CountJob)
@@ -2076,7 +2094,7 @@ Func CommandCariSilk()
 			MouseClick( "left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobSilk)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xSilk = 0
 			$ySilk = 0
 			$xJob = 0
@@ -2104,7 +2122,7 @@ Func CommandCariDust()
 		$SearchAreaBottom = IniRead($hFileSetting,"MagicDustStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region Loop Cari Crystal
 	Do
@@ -2127,7 +2145,7 @@ Func CommandCariDust()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
 		$TotalPickDust += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Magic Dust", "PosX: " & $xDust & " PosY: " & $yDust & " Total Collected Dust: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchDust = 0
@@ -2142,12 +2160,12 @@ Func CommandCariDust()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobDust = 1
@@ -2159,12 +2177,12 @@ Func CommandCariDust()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobDust = 1
@@ -2176,12 +2194,12 @@ Func CommandCariDust()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobDust = 1
@@ -2193,12 +2211,12 @@ Func CommandCariDust()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xDust + $UPosXDust, $yDust + $UPosYDust, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobDust = 1
@@ -2208,7 +2226,7 @@ Func CommandCariDust()
 			MouseClick("left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " & $GetJobDust)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xDust = 0
 			$yDust = 0
 			$xJob = 0
@@ -2236,7 +2254,7 @@ Func CommandCariGems()
 		$SearchAreaBottom = IniRead($hFileSetting,"GemsStat","hBottom",670)
 ;~ 		MouseMove( $SearchAreaTop, $SearchAreaLeft, 30)
 ;~ 		MouseMove( $SearchAreaRight, $SearchAreaBottom, 30)
-;~ 		MouseMove(100, 395, 3)
+;~ 		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 	#EndRegion
 	#Region Loop Cari Gems
 		Do
@@ -2269,7 +2287,7 @@ Func CommandCariGems()
 		Sleep(Int(Number($DelayGetJob)))
 		MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
 		$TotalPickGems += 1
-		MouseMove(100, 395, 3)
+		MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		PesanKonsol("Collecting Gems", "PosX: " & $xGem & " PosY: " & $yGem & " Total Collected Gems: " & $TotalPickCrystals)
 		CommandSetTitle($TotalPickResources , $TotalPickGolds, $TotalPickElixir, $TotalPickPlanks, $TotalPickMarbles, $TotalPickCrystals, $TotalPickScrolls, $TotalPickSilks, $TotalPickElixir, $TotalPickDust, $TotalPickGems)
 		$CountSearchGem = 0
@@ -2284,12 +2302,12 @@ Func CommandCariGems()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobGem = 1
@@ -2301,12 +2319,12 @@ Func CommandCariGems()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobGem = 1
@@ -2318,12 +2336,12 @@ Func CommandCariGems()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobGem = 1
@@ -2335,12 +2353,12 @@ Func CommandCariGems()
 					$CountJob += 1
 					If $CountJob = 8 Then
 						Sleep(200)
-						MouseClick( "left", 100, 395, 1, 3)
+						MouseClick( "left", Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						PesanKonsol("Loop Pick Job", "Force Pick Job..." & " Count: " & $CountJob)
 						Sleep(200)
 						MouseClick("left", $xGem + $UPosXGem, $yGem + $UPosYGem, 1, 8)
 						Sleep(200)
-						MouseMove(100, 395, 3)
+						MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 						$CountJob = 0
 					EndIf
 				Until $PickJobGem = 1
@@ -2350,7 +2368,7 @@ Func CommandCariGems()
 			MouseClick("left", $xJob, $yJob, 1, 8)
 			PesanKonsol("Job Found @Count: " & $CountJob, "Start Production: " &$GetJobGem)
 			Sleep(200)
-			MouseMove(100, 395, 3)
+			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 			$xGem = 0
 			$yGem = 0
 			$xJob = 0
