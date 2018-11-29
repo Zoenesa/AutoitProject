@@ -1,16 +1,16 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=IconRes.ico
-#AutoIt3Wrapper_Outfile=MainScript V.1.6.5.2.exe
-#AutoIt3Wrapper_Outfile_x64=MainScript V.1.6.5.2_X64.exe
+#AutoIt3Wrapper_Outfile=MainScript V.1.7.1.exe
+#AutoIt3Wrapper_Outfile_x64=MainScript V.1.7.1_X64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Change2CUI=y
 #AutoIt3Wrapper_Res_Comment=Elvenar AutoClick
 #AutoIt3Wrapper_Res_Description=Elvenar AutoClicker Update CursorHold
-#AutoIt3Wrapper_Res_Fileversion=1.6.5.2
+#AutoIt3Wrapper_Res_Fileversion=1.7.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_ProductName=Elvenar AutoClick
-#AutoIt3Wrapper_Res_ProductVersion=1.6.5.2
+#AutoIt3Wrapper_Res_ProductVersion=1.7.1
 #AutoIt3Wrapper_Res_CompanyName=ZnsZ
 #AutoIt3Wrapper_Res_LegalCopyright=AgungJawata™
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -862,12 +862,14 @@ Func CommandCariResource()
 	#EndRegion
 	#Region Loop Pencarian Image
 	Do
+;~ 		PesanKonsol(_GetFileName($ArrayImgResc[$iResc]))
 		$CariResource = _ImageSearchArea( $ArrayImgResc[$iResc], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xRes, $yRes, Int(Number($t__Resc)))
 		$iResc += 1
 		If $iResc = 4 Then $iResc = 0
 		$CountSearchResc += 1
 		Sleep(Int(Number($DelaySearchImage)))
-		PesanKonsol("Searching Resource Current Stack: " & $ResourceStack & ", Limit: " & $LimitFindResource & " Stack: " & $IniStack & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & $iResc)
+
+		PesanKonsol("Searching Resource Current Stack: " & $ResourceStack & ", Limit: " & $LimitFindResource & " Stack: " & $IniStack & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchResc & " Using Image: " & _GetFileName($ArrayImgResc[$iResc]))
 		If $CountSearchResc = Int($LimitFindResource) Then
 			$CountSearchResc = 0
 			If $ResourceStack = $IniStack Then
@@ -1093,6 +1095,7 @@ Func CommandCariGold()
 	#Region
 	Do
 ;~ 		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, 561, 147, 1268, 648, $xGold, $yGold, Int(Number($t__Gold)))
+
 		$CariGold = _ImageSearchArea( $ArrayImgFindGold[$iGold], 1, Int($SearchAreaTop), Int($SearchAreaLeft), Int($SearchAreaRight), Int($SearchAreaBottom), $xGold, $yGold, Int(Number($t__Gold)))
 		Local $FalseWindw = _ImageSearch( $imgTutupWindow, 1, $xFalseWindw, $yFalseWindw, 10)
 		If $FalseWindw = 1 Then
@@ -1102,10 +1105,10 @@ Func CommandCariGold()
 			MouseMove(Int($CursorHold[1]), Int($CursorHold[2]), Int($CursorHold[3]))
 		EndIf
 		$iGold += 1
-		If $iGold = 3 Then $iGold = 0
+		If $iGold = 12 Then $iGold = 0
 		$CountSearchGold += 1
 		Sleep(Int($DelaySearchImage))
-		PesanKonsol( "Searching Gold, Limit: " &$LimitFindGold & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchGold + 1 & " Using Image: " & $iGold)
+		PesanKonsol( "Searching Gold, Limit: " &$LimitFindGold & ", Delay: " & $DelaySearchImage, "Count: " & $CountSearchGold + 1 & " Using Image: " & _GetFileName($ArrayImgFindGold[$iGold]))
 		If $CountSearchGold = Int($LimitFindGold) Then
 			PesanKonsol( "Maximum Stack Gold Reach", "Executing Search for Metal")
 			;Coba Reset Web While Counting Limit

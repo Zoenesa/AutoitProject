@@ -45,7 +45,16 @@ Global $imgsrc17 = $imgPathGold & "goldm.bmp"
 Global $imgsrc18 = $imgPathGold & "golds.bmp"
 Global $imgsrc19 = $imgPathGold & "goldvar.bmp"
 
-Global $ArrayImgFindGold[4] = [$imgsrc16, $imgsrc17, $imgsrc18, $imgsrc19]
+Global $imgadd1 = $imgPathGold & "item1.bmp"
+Global $imgadd2 = $imgPathGold & "item2.bmp"
+Global $imgadd3 = $imgPathGold & "item3.bmp"
+Global $imgadd4 = $imgPathGold & "item4.bmp"
+Global $imgadd5 = $imgPathGold & "item5.bmp"
+Global $imgadd6 = $imgPathGold & "item6.bmp"
+Global $imgadd7 = $imgPathGold & "item7.bmp"
+Global $imgadd8 = $imgPathGold & "item8.bmp"
+
+Global $ArrayImgFindGold[12] = [$imgsrc16, $imgsrc17, $imgsrc18, $imgsrc19, $imgadd1, $imgadd2, $imgadd3, $imgadd4, $imgadd5, $imgadd6, $imgadd7, $imgadd8]
 
 Global $imgsrc20 = $imgPathMetal & "metall.bmp"
 Global $imgsrc21 = $imgPathMetal & "metalm.bmp"
